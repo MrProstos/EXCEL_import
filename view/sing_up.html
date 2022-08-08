@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+    <script src="js/script.js"></script>
+    <title>Sing up</title>
+</head>
+<body>
+<header></header>
+<main>
+    <div class="sign-in box">
+            <div class="content title">
+                <h1 class="has-text-centered">Sign up</h1>
+            </div>
+            <form class="form block" name="registration" method="POST" action="">
+                <script>Validate()</script>
+                <div class="username item block">
+                    <div class="username">Ваш логин</div>
+                    <label>
+                        <input class="input username__input" type="text" name="username" minlength="3" required>
+                    </label>
+                </div>
+                <div class="email item block">
+                    <div class="email">Ваш email</div>
+                    <label>
+                        <input class="input email__input" type="email" name="email" required>
+                    </label>
+                </div>
+                <div class="password item block">
+                    <div>Пароль</div>
+                    <label>
+                        <input class="input password__input" type="password" name="password"  data-rule-password="true" required>
+                    </label>
+                </div>
+                <div class="password_confirm item block">
+                    <div>Подтвердите пароль</div>
+                    <label>
+                        <input class="input password_confirm__input" type="password" name="password_confirm"  data-rule-password="true" data-rule-equalTo=".password__input" required>
+                    </label>
+                </div>
+                <div class="block">
+                    <input class="send button is-success" type="submit" name="submit_btn" value="Регистрация">
+                </div>
+            </form>
+        </div>
+</main>
+<footer></footer>
+</body>
+</html>

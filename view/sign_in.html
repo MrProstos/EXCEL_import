@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Sign in</title>
+</head>
+<body>
+<header></header>
+<main>
+        <div class="sign-in box">
+            <div class="title content">
+                <h1 class="has-text-centered">Sign in</h1>
+            </div>
+            <form class="form block" name="registration" method="POST" action="">
+                <div class="email block">
+                    <div class="email">Ваш email</div>
+                    <label>
+                        <input class="input email__input" type="email" name="email" required="required">
+                    </label>
+                </div>
+                <div class="password block">
+                    <div>Пароль</div>
+                    <label>
+                        <input class="input password__input" type="password" name="password" required="required">
+                    </label>
+                </div>
+                <div class="block">
+                    <input class="button is-success" type="submit" name="submit_btn" value="Войти">
+                </div>
+            </form>
+            <div class="block">
+                <p>Новый пользователь? <a class="tag is-link is-light is-rounded" href="/view/sing_up.html"> Регистрация</a></p>
+            </div>
+        </div>
+</main>
+<footer></footer>
+</body>
+</html>
