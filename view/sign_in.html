@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+    <script src="js/script.js"></script>
     <title>Sign in</title>
 </head>
 <body>
@@ -15,16 +18,17 @@
                 <h1 class="has-text-centered">Sign in</h1>
             </div>
             <form class="form block" name="registration" method="POST" action="">
+                <script>Validate()</script>
                 <div class="email block">
                     <div class="email">Ваш email</div>
                     <label>
-                        <input class="input email__input" type="email" name="email" required="required">
+                        <input class="input email__input" type="email" name="email" required>
                     </label>
                 </div>
                 <div class="password block">
                     <div>Пароль</div>
                     <label>
-                        <input class="input password__input" type="password" name="password" required="required">
+                        <input class="input password__input" type="password" name="password" minlength="8" required>
                     </label>
                 </div>
                 <div class="block">
