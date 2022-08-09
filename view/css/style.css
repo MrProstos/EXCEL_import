@@ -1,22 +1,29 @@
 
-
 .sign-in, .sign-up {
     margin: 10% auto 0;
     width: 500px;
 }
 
-.import {
-    margin: 10% auto 0;
-    width: 350px;
-}
-
-.import-table__box {
+.import-table__box, .result-table__box {
     margin: 10% auto 0;
     width: 1300px;
 }
-.import-table {
+
+.import-table,.result-table {
     width: 100%;
 }
+
+label.error {
+    color: #a94442;
+    font-size: 13px;
+}
+
 html {
     background: #34568B;
 }
+
+.result-table__row__hidden {
+    display: none;
+}
+
+/*-------------------------------------------*/

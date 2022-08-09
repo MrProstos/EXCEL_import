@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Table</title>
+    <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -11,88 +11,92 @@
     <script src="js/script.js"></script>
 </head>
 <body>
-<div class="box import-table__box">
-    <div class="block">
-        <button class="button box">Загрузить прайс-лист</button>
-    </div>
-    <script>
-        UniqueSelect();
-    </script>
-    <table class="table import-table m-auto">
+<script>PageSwitch()</script>
+<div class="box result-table__box container is-widescreen">
+    <table class="table result-table">
         <thead>
         <tr>
-            <th>
-                <select class="select-col">
-                    <option>Артикул</option>
-                    <option>Название товара</option>
-                    <option>Поставщик</option>
-                    <option>Цена</option>
-                    <option>Кол-во</option>
-                    <option>Null</option>
-                </select>
-            </th>
-            <th>
-                <select class="select-col">
-                    <option>Артикул</option>
-                    <option>Название товара</option>
-                    <option>Поставщик</option>
-                    <option>Цена</option>
-                    <option>Кол-во</option>
-                    <option>Null</option>
-                </select>
-            </th>
-            <th>
-                <select class="select-col">
-                    <option>Артикул</option>
-                    <option>Название товара</option>
-                    <option>Поставщик</option>
-                    <option>Цена</option>
-                    <option>Кол-во</option>
-                    <option>Null</option>
-                </select>
-            </th>
-            <th>
-                <select class="select-col">
-                    <option>Артикул</option>
-                    <option>Название товара</option>
-                    <option>Поставщик</option>
-                    <option>Цена</option>
-                    <option>Кол-во</option>
-                    <option>Null</option>
-                </select>
-            </th>
-            <th>
-                <select class="select-col">
-                    <option>Артикул</option>
-                    <option>Название товара</option>
-                    <option>Поставщик</option>
-                    <option>Цена</option>
-                    <option>Кол-во</option>
-                    <option>Null</option>
-                </select>
-            </th>
+            <th>Артикул</th>
+            <th>Название товара</th>
+            <th>Поставщик</th>
+            <th>Цена</th>
+            <th>Кол-во</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr class="result-table__row">
             <td>1</td>
             <td>2</td>
-            <td>1</td>
-            <td>2</td>
-            <td>1</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
         </tr>
-        <tr>
+        <tr class="result-table__row">
             <td>1</td>
             <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr class="result-table__row">
             <td>1</td>
             <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr class="result-table__row">
             <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr class="result-table__row">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr class="result-table__row">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr class="result-table__row">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+        </tr>
+        <tr class="result-table__row">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
         </tr>
         </tbody>
     </table>
-    <div class="block mt-5">
-        <button class="button box">Загрузить прайс-лист</button>
-    </div>
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <a class="pagination-previous is-disabled is-centered">Назад</a>
+        <a class="pagination-next">Вперед</a>
+        <ul class="pagination-list">
+            <li>
+                <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
+            </li>
+            <li>
+                <a class="pagination-link" aria-label="Goto page 2">2</a>
+            </li>
+            <li>
+                <a class="pagination-link" aria-label="Goto page 3">3</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

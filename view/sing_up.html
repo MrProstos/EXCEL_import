@@ -17,24 +17,24 @@
             <div class="content title">
                 <h1 class="has-text-centered">Регистрация</h1>
             </div>
-            <form class="form block" name="sign_up" method="POST" action="">
+            <form class="sign-up__form block" name="sign_up" method="POST" action="">
                 <script>ValidateSignUp()</script>
                 <div class="username item block">
                     <div class="username">Ваш логин</div>
                     <label>
-                        <input class="input username__input" type="text" name="username" minlength="3" required>
+                        <input class="input username__input" type="text" name="username" minlength="3">
                     </label>
                 </div>
                 <div class="email item block">
                     <div class="email">Ваш email</div>
                     <label>
-                        <input class="input email__input" type="email" name="email" required>
+                        <input class="input email__input" type="email" name="email">
                     </label>
                 </div>
                 <div class="password item block">
                     <div>Пароль</div>
                     <label>
-                        <input class="input password__input" type="password" name="password"  data-rule-password="true" required>
+                        <input class="input password__input" type="password" name="password"  data-rule-password="true">
                     </label>
                 </div>
                 <div class="password_confirm item block">

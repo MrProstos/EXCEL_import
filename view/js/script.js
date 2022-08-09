@@ -2,20 +2,24 @@
 
 function ValidateSignIn() {
     $(document).ready(function () {
-        $(".form").validate({
+        $(".sign-in__form").validate({
             rules: {
                 email: {
+                    required: true,
                     email: true
                 },
                 password: {
+                    required: true,
                     minlength: 8
                 },
             },
             messages: {
                 email: {
-                    email:"email некорректный"
+                    required: "это поле обязательно для заполнения",
+                    email: "email некорректный"
                 },
                 password: {
+                    required: "это поле обязательно для заполнения",
                     minlength: "минимальная длинна пароля 8 символов"
                 }
             }
@@ -25,38 +29,50 @@ function ValidateSignIn() {
 
 function ValidateSignUp() {
     $(document).ready(function () {
-        $(".form").validate({
+        $(".sign-up__form").validate({
             rules: {
-                email : {
+                email: {
+                    required: true,
                     email: true
                 },
                 username: {
+                    required: true,
                     minlength: 3
                 },
                 password: {
+                    required: true,
                     minlength: 8
                 },
                 password_confirm: {
+                    required: true,
                     minlength: 8,
                     equalTo: ".password__input"
                 }
             },
             messages: {
                 email: {
-                    email:"email некорректный"
+                    required: "это поле обязательно для заполнения",
+                    email: "email некорректный"
                 },
                 username: {
-                  minlength: "минимальная длинна логина 3 символа"
+                    required: "это поле обязательно для заполнения",
+                    minlength: "минимальная длинна логина 3 символа"
                 },
                 password: {
+                    required: "это поле обязательно для заполнения",
                     minlength: "минимальная длинна пароля 8 символов"
                 },
                 password_confirm: {
-                  equalTo: "пароли не совпадают"
+                    required: "это поле обязательно для заполнения",
+                    equalTo: "пароли не совпадают"
                 }
             }
         });
     })
+}
+
+function ValidationFile() {
+
 }
 
 function SizeFile() {
@@ -67,14 +83,16 @@ function SizeFile() {
             if (this.files[0].size > MAX_FILE_SIZE) {
                 console.log("Файл больше 30 MB!");
                 alert("Файл больше 30 MB!");
+                return
             }
+            $(".file-name").text(this.files[0]["name"])
         });
     });
 }
 
 function UniqueSelect() {
     $(function () {
-        $(".select-col").change(function() {
+        $(".select-col").change(function () {
             let used = new Set;
             $(".select-col").each(function () {
                 let reset = false;
@@ -88,4 +106,14 @@ function UniqueSelect() {
             });
         }).trigger("change");
     });
+}
+
+function PageSwitch() {
+    $(document).ready(function () {
+        $(".pagination-link").click(function () {
+           console.log( )
+
+        })
+    })
+
 }

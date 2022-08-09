@@ -11,23 +11,111 @@
     <script src="js/script.js"></script>
 </head>
 <body>
-<header></header>
-<main>
-    <div class="import box">
-        <script>SizeFile()</script>
-        <form class="form block" name="sign_in" method="POST" action="">
-            <p class="content is-medium">Выберите файл для импорта</p>
-            <div class="file block">
-                <label class="file-label">
-                    <input class="input file__input" type="file" name="file" accept=".xls,.xlsx" required>
-                </label>
-            </div>
-            <div class="block">
-                <input class="button is-success" type="submit" name="submit_btn" value="Импортировать">
-            </div>
-        </form>
+<div class="box import-table__box container is-widescreen">
+    <script>
+        SizeFile();
+        UniqueSelect();
+    </script>
+    <form class="import__form form block" name="sign_in" method="POST" action="">
+        <div class="file has-name">
+            <label class="file-label">
+                <input class="input file__input file-input" type="file" name="file" accept=".xls,.xlsx" required>
+                <span class="file-cta">
+                    <span class="file-icon"><i class="fas fa-upload"></i></span>
+                    <span class="file-label">Выберите файл</span>
+                </span>
+                <span class="file-name"></span>
+            </label>
+        </div>
+    </form>
+    <div class="block">
+        <button class="button box">Загрузить прайс</button>
     </div>
-</main>
-<footer></footer>
+    <table class="table import-table m-auto">
+        <thead>
+        <tr>
+            <th>
+                <div class="select">
+                    <select class="select-col">
+                        <option>Артикул</option>
+                        <option>Название товара</option>
+                        <option>Поставщик</option>
+                        <option>Цена</option>
+                        <option>Кол-во</option>
+                        <option>Null</option>
+                    </select>
+                </div>
+            </th>
+            <th>
+                <div class="select">
+                    <select class="select-col">
+                        <option>Артикул</option>
+                        <option>Название товара</option>
+                        <option>Поставщик</option>
+                        <option>Цена</option>
+                        <option>Кол-во</option>
+                        <option>Null</option>
+                    </select>
+                </div>
+            </th>
+            <th>
+                <div class="select">
+                    <select class="select-col">
+                        <option>Артикул</option>
+                        <option>Название товара</option>
+                        <option>Поставщик</option>
+                        <option>Цена</option>
+                        <option>Кол-во</option>
+                        <option>Null</option>
+                    </select>
+                </div>
+            </th>
+            <th>
+                <div class="select">
+                    <select class="select-col">
+                        <option>Артикул</option>
+                        <option>Название товара</option>
+                        <option>Поставщик</option>
+                        <option>Цена</option>
+                        <option>Кол-во</option>
+                        <option>Null</option>
+                    </select>
+                </div>
+            </th>
+            <th>
+                <div class="select">
+                    <select class="select-col">
+                        <option>Артикул</option>
+                        <option>Название товара</option>
+                        <option>Поставщик</option>
+                        <option>Цена</option>
+                        <option>Кол-во</option>
+                        <option>Null</option>
+                    </select>
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>1</td>
+            <td>2</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>1</td>
+            <td>2</td>
+            <td>1</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="block mt-5">
+        <button class="button box"><b>Завершить обработку</b></button>
+    </div>
+</div>
 </body>
 </html>
