@@ -1,4 +1,6 @@
-.sign-in {
+
+
+.sign-in, .sign-up, .import {
     margin: 10% auto 0;
     width: 500px;
 }
