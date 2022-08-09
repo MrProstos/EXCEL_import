@@ -1,9 +1,35 @@
 "use strict";
 
-function Validate() {
+function ValidateSignIn() {
     $(document).ready(function () {
         $(".form").validate({
             rules: {
+                email: {
+                    email: true
+                },
+                password: {
+                    minlength: 8
+                },
+            },
+            messages: {
+                email: {
+                    email:"email некорректный"
+                },
+                password: {
+                    minlength: "минимальная длинна пароля 8 символов"
+                }
+            }
+        });
+    })
+}
+
+function ValidateSignUp() {
+    $(document).ready(function () {
+        $(".form").validate({
+            rules: {
+                email : {
+                    email: true
+                },
                 username: {
                     minlength: 3
                 },
@@ -13,6 +39,20 @@ function Validate() {
                 password_confirm: {
                     minlength: 8,
                     equalTo: ".password__input"
+                }
+            },
+            messages: {
+                email: {
+                    email:"email некорректный"
+                },
+                username: {
+                  minlength: "минимальная длинна логина 3 символа"
+                },
+                password: {
+                    minlength: "минимальная длинна пароля 8 символов"
+                },
+                password_confirm: {
+                  equalTo: "пароли не совпадают"
                 }
             }
         });
