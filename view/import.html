@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Import</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+    <script src="js/script.js"></script>
+</head>
+<body>
+<header></header>
+<main>
+    <div class="import box">
+        <script>SizeFile()</script>
+        <form class="form block" name="sign_in" method="POST" action="">
+            <p class="content is-medium">Выберите файл для импорта</p>
+            <div class="file block">
+                <label class="file-label">
+                    <input class="input file__input" type="file" name="file" accept=".xls,.xlsx" required>
+                </label>
+            </div>
+            <div class="block">
+                <input class="button is-success" type="submit" name="submit_btn" value="Импортировать">
+            </div>
+        </form>
+    </div>
+</main>
+<footer></footer>
+</body>
+</html>
