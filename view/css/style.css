@@ -1,10 +1,22 @@
 
 
-.sign-in, .sign-up, .import {
+.sign-in, .sign-up {
     margin: 10% auto 0;
     width: 500px;
 }
 
+.import {
+    margin: 10% auto 0;
+    width: 350px;
+}
+
+.import-table__box {
+    margin: 10% auto 0;
+    width: 1300px;
+}
+.import-table {
+    width: 100%;
+}
 html {
     background: #34568B;
 }
