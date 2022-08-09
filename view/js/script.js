@@ -31,3 +31,21 @@ function SizeFile() {
         });
     });
 }
+
+function UniqueSelect() {
+    $(function () {
+        $(".select-col").change(function() {
+            let used = new Set;
+            $(".select-col").each(function () {
+                let reset = false;
+                $("option", this).each(function () {
+                    let hide = used.has($(this).text());
+                    if (hide && $(this).is(':selected')) reset = true;
+                    $(this).prop("hidden", hide);
+                });
+                if (reset) $("option:not([hidden]):first", this).prop("selected", true);
+                used.add($("option:selected", this).text());
+            });
+        }).trigger("change");
+    });
+}
