@@ -71,9 +71,6 @@ function ValidateSignUp() {
     })
 }
 
-function ValidationFile() {
-
-}
 
 function SizeFile() {
     const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
