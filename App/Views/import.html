@@ -5,10 +5,11 @@
     <title>Import</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="http://localhost/css/style.css">
+    <link rel="stylesheet" href="http://mrprostos.keenetic.link/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
-    <script src="http://localhost/js/script.js"></script>
+    <script src="http://mrprostos.keenetic.link/js/script.js"></script>
+    <script src="http://mrprostos.keenetic.link/js/formsubmit.js"></script>
 </head>
 <body>
 <div class="box import-table__box container is-widescreen">
@@ -16,10 +17,10 @@
         SizeFile();
         UniqueSelect();
     </script>
-    <form class="import__form form block" name="sign_in" method="POST" action="?import/">
+    <form class="import__form form block" method="post" action="javascript:ImportForm();" enctype="multipart/form-data">
         <div class="file has-name block">
             <label class="file-label">
-                <input class="input file__input file-input" type="file" name="file" accept=".xls,.xlsx" required>
+                <input class="input file__input file-input" type="file" name="uploadFile" accept=".xls,.xlsx" required>
                 <span class="file-cta">
                     <span class="file-icon"><i class="fas fa-upload"></i></span>
                     <span class="file-label">Выберите файл</span>
@@ -28,7 +29,7 @@
             </label>
         </div>
         <div class="block">
-            <button class="button block box">Загрузить прайс</button>
+            <button class="button block import__button" type="submit">Загрузить прайс</button>
         </div>
     </form>
 
@@ -97,20 +98,13 @@
             </th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>1</td>
-            <td>2</td>
-            <td>1</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>1</td>
-            <td>2</td>
-            <td>1</td>
+        <tbody class="tbody-result-import">
+        <tr class="tbody-result-import__row">
+            <td class="tbody-result-import__cell"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         </tbody>
     </table>

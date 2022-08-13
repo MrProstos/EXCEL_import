@@ -8,35 +8,18 @@ use App\Models\Users;
 class Sign_in extends \Core\Controller
 {
 
-    /**
-     * Show the Sign_in page
-     *
-     * @return bool
-     * @throws \Exception
-     */
-
-    function before(): bool
+    protected function before()
     {
-
-        $email = $_COOKIE["email"];
-        $password = $_COOKIE["password"];
-
-        $users = new Users();
-        $users->CheckUser($email, $password);
-        if ($users) {
-            View::render("import.html");
-            return false;
+        $controller = new Auth();
+        if ($controller->Auth()) {
+            header("Location: http://mrprostos.keenetic.link/?import/");
         }
-
-        return true;
     }
-
 
     public function indexAction(): void
     {
-        View::render("sign_in.html");
+        View::renderTemplate("sign_in.html");
     }
-
 
 
     public function sign_in()
@@ -52,7 +35,10 @@ class Sign_in extends \Core\Controller
             die();
         }
 
-        setcookie("email",$email);
+        setcookie("email", $email);
         setcookie("password", Users::HashPassword($password));
+
+        header("Location: http://mrprostos.keenetic.link/?import/");
     }
+
 }

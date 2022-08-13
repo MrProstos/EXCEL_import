@@ -24,11 +24,11 @@ class Sign_up extends \Core\Controller
         $username = $_POST["username"];
         $email = $_POST["email"];
         $password = $_POST["password"];
-//        $hash = password_hash($email . time(), PASSWORD_DEFAULT);
+        $hash = password_hash($email . time(), PASSWORD_DEFAULT);
 
         $users = new Users();
         $users->Registration($username, $email, $password) or die();
 
-
+        header("Location: http://mrprostos.keenetic.link/");
     }
 }
