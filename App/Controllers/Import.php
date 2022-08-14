@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Users;
 use Core\View;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use  PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -55,5 +56,19 @@ class Import extends \Core\Controller
         }
 
         echo json_encode($msg);
+    }
+
+    public function insertTableAction()
+    {
+        header("Content-type:application/json");
+        if (isset($_POST["data"])) {
+            $dataArr = $_POST["data"];
+            $usersDb = new Users();
+            if (!$usersDb->insertDataImport($dataArr)) {
+                echo json_encode(["status"=>"Ошибка импорта"]);
+                return;
+            }
+            echo json_encode(["status"=>"Все хорошо"]);
+        }
     }
 }

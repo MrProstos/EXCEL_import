@@ -15,7 +15,7 @@
 <div class="box import-table__box container is-widescreen">
     <script>
         SizeFile();
-        UniqueSelect();
+
     </script>
     <form class="import__form form block" method="post" action="javascript:ImportForm();" enctype="multipart/form-data">
         <div class="file has-name block">
@@ -32,31 +32,21 @@
             <button class="button block import__button" type="submit">Загрузить прайс</button>
         </div>
     </form>
-    <table class="table import-table m-auto">
-        <thead>
-        <tr class="thead__row">
-            <th class="thead-result__cell">
-                <div class="select">
-                    <select class="select-col">
-                        <option value="" selected="selected">Null</option>
-                        <option value="Артикул">Артикул</option>
-                        <option value="НазваниеТовара">Название товара</option>
-                        <option value="Поставщик">Поставщик</option>
-                        <option value="Цена">Цена</option>
-                        <option value="Кол-во">Кол-во</option>
-                    </select>
-                </div>
-            </th>
-        </tr>
-        </thead>
-        <tbody class="tbody-result-import">
-        <tr class="tbody-result-import__row">
-            <td class="tbody-result-import__cell"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="import__table-container">
+        <table class="table import-table m-auto">
+            <thead>
+            <tr class="thead__row">
+
+
+            </tr>
+            </thead>
+            <tbody class="tbody-result-import">
+
+            </tbody>
+        </table>
+    </div>
     <div class="block mt-5">
-        <button class="button box"><b>Завершить обработку</b></button>
+        <button class="button box" type="button" onclick="ChooseSelect();"><b>Завершить обработку</b></button>
     </div>
 </div>
 </body>

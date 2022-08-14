@@ -20,6 +20,10 @@ $auth = new App\Controllers\Auth();
 if ($auth->isAuth()) {
     $router->add("import/",["controller" => "Import", "action" => "index"]);
     $router->add("import/import",["controller" => "Import", "action" => "parseUploadFile"]);
+    $router->add("import/insertTable",["controller" => "Import", "action" => "insertTable"]);
+
+    $router->add("table/",["controller"=>"Table","action"=>"index"]);
+    $router->add("table/update",["controller"=>"Table","action"=>"update"]);
 }
 
 $router->add("", ["controller" => "SignIn", "action" => "index"]);

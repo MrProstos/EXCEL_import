@@ -1,6 +1,6 @@
 "use strict";
 
-const SERVERURL = "http://mrprostos.keenetic.link/"
+const SERVER_URL = "http://mrprostos.keenetic.link/"
 
 function ImportForm() {
 
@@ -8,7 +8,7 @@ function ImportForm() {
     formData.append("file", $("input[type=file]")[0].files[0]);
 
     $.ajax({
-        url: SERVERURL + "?import/import",
+        url: SERVER_URL + "?import/import",
         type: "POST",
         data: formData,
         processData: false,
@@ -16,29 +16,31 @@ function ImportForm() {
         success: function (data) {
 
             let result = JSON.parse(data);
-            let theadResultCell = $(".thead-result__cell")
+
 
             for (let i = 0; i < result[0].length; i++) {
-                theadResultCell.clone().appendTo(".thead__row")
+                let theadResultCell = `<th class="thead-result__cell">
+                <div class="select">
+                    <select class="select-col">
+                        <option value="">Null</option>
+                        <option value="sku">Артикул</option>
+                        <option value="product_name">Название товара</option>
+                        <option value="supplier">Поставщик</option>
+                        <option value="price">Цена</option>
+                        <option value="cnt">Кол-во</option>
+                    </select>
+                </div>
+            </th>`
+
+                $(".thead__row").append(theadResultCell)
             }
 
-            let tbodyResultImportRow = $(".tbody-result-import__row")
-
-            result.forEach(function () {
-                tbodyResultImportRow.clone().appendTo(".tbody-result-import")
-            })
-
-            let tbodyResultImportCell = $(".tbody-result-import__cell")
-
-            tbodyResultImportCell.each(function (index, value) {
-
-                result[index].forEach(function (n) {
-                    $(value).clone().text(n).appendTo(".tbody-result-import__row")
-                })
-                console.log(result[index], value)
-            })
-
-
+            for (let i = 0; i < result.length; i++) {
+                $(".tbody-result-import").append(`<tr class="tbody-result-import__row-${i}"></tr>`) // TODO Исправить потом
+                for (let j = 0; j < result[i].length; j++) {
+                    $(`.tbody-result-import__row-${i}`).append(`<td class="tbody-result-import__cell">${result[i][j]}</td>`)
+                }
+            }
         }
     })
 }

@@ -71,7 +71,6 @@ function ValidateSignUp() {
     })
 }
 
-
 function SizeFile() {
     const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
 
@@ -87,23 +86,49 @@ function SizeFile() {
     });
 }
 
-function UniqueSelect() {
-    // $(function () {
-    //     $(".select-col").change(function () {
-    //         let uniqOptions = new Set()
-    //         let options = $(".select-col").children()
-    //         $(options).
-    //         console.log(options)
-    //     });
-    // });
+function ChooseSelect() {
+
+    let dataArr = {
+        "data": {
+            "sku": {"index": null, "value": []},
+            "product_name": {"index": null, "value": []},
+            "supplier": {"index": null, "value": []},
+            "price": {"index": null, "value": []},
+            "cnt": {"index": null, "value": []}
+        }
+    }
+
+    $(".select-col option:selected").each(function (indexSelect, valueSelect) {
+        if ($(valueSelect).val() !== "") {
+            dataArr["data"][$(valueSelect).val()]["index"] = indexSelect
+            console.log(indexSelect, $(valueSelect).val())
+        }
+    });
+
+    for (let index in dataArr["data"]) {
+        $(".tbody-result-import").children().each(function (indexRow, valueRow) {
+            $(valueRow).children().each(function (indexCell, valueCell) {
+                if (indexCell === dataArr["data"][index]["index"]) {
+                    dataArr["data"][index]["value"].push($(valueCell).text())
+                    // console.log($(valueCell).text())
+                }
+            })
+        })
+    }
+    console.log(dataArr)
+
+    $.post("?import/insertTable", dataArr, function (msg, status) {
+            console.log(msg, status)
+        }
+    )
 }
 
-function PageSwitch() {
+function showTable() {
     $(document).ready(function () {
-        $(".pagination-link").click(function () {
-            console.log()
+        $.post("?table/update", function (msg, status) {
+            console.log(msg,status)
+            // let dataTable = JSON.parse(msg)
 
         })
     })
-
 }
