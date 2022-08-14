@@ -14,13 +14,17 @@ class Table extends \Core\Controller
 
     public function updateAction()
     {
+        $page = $_POST["page"];
+
         $usersDb = new Users();
-        $dataTable = $usersDb->showTablePrays();
+
+        $dataTable = $usersDb->showTablePrays($page);
         if ($dataTable === []) {
             return false;
         };
 
         echo json_encode($dataTable);
+
     }
 
 }
