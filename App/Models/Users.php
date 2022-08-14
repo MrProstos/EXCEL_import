@@ -8,20 +8,14 @@ use PDO;
 class Users extends \Core\Model
 {
 
-    static function HashPassword(string $passwd): string
-    {
-        $salt = "kkklllttt";
-        return md5($passwd . $salt);
-    }
-
-    public function Registration(string $username, string $email, string $passwd): bool
+    public function registrationUser(string $username, string $email, string $passwd): bool
     {
         try {
             $db = static::getDB();
 
-            $result = $db->prepare("insert into reg_user (username, email, passwd) values (?,?,?)");
-            $hash_passwd = self::HashPassword($passwd);
-            $result->execute([$username, $email, $hash_passwd]);
+            $result = $db->prepare("insert into reg_user (username, email, passwd, confirm_email) values (?,?,?,'no')");
+            $hash = md5($email . $passwd);
+            $result->execute([$username, $email, $hash]);
 
             return true;
 
@@ -32,24 +26,58 @@ class Users extends \Core\Model
         }
     }
 
-    public function CheckUser(string $email, string $passwd): bool
+
+    public function isUser(string $hash): bool
+    {
+        $db = static::getDB();
+
+        $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = ?");
+        $result->execute([$hash]);
+
+        if ($result->rowCount() != 1) {
+            return false;
+        }
+        return true;
+    }
+
+
+    public function checkUser(string $email, string $passwd): bool
     {
         try {
             $db = static::getDB();
 
-            $result = $db->prepare("SELECT * FROM reg_user WHERE email = ? AND passwd = ?"); // TODO добавить проверку активации почты
-            $hash_passwd = self::HashPassword($passwd);
-            $result->execute([$email, $hash_passwd]);
+            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = ? and confirm_email = 'yes'"); // TODO добавить проверку активации почты
+            $hash = md5($email . $passwd);
+            $result->execute([$hash]);
 
             if ($result->rowCount() != 1) {
-                return false;
 
+                return false;
             }
             return true;
 
         } catch (\PDOException $e) {
             echo $e->getMessage();  // TODO Потом удалить
+            return false;
+        }
+    }
 
+    public function confirmMail(string $hash): bool
+    {
+        try {
+            $db = static::getDB();
+
+            $result = $db->prepare("UPDATE reg_user SET confirm_email = 'yes' WHERE passwd = ?"); // TODO добавить проверку активации почты
+            $result->execute([$hash]);
+
+            if ($result->rowCount() != 1) {
+                return false;
+            }
+
+            return true;
+
+        } catch (\PDOException $e) {
+            echo $e->getMessage();  // TODO Потом удалить
             return false;
         }
     }

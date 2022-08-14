@@ -5,13 +5,14 @@ namespace App\Controllers;
 use \Core\View;
 use App\Models\Users;
 
-class Sign_in extends \Core\Controller
+
+class SignIn extends \Core\Controller
 {
 
     protected function before()
     {
-        $controller = new Auth();
-        if ($controller->Auth()) {
+        $auth = new Auth();
+        if ($auth->isAuth()) {
             header("Location: http://mrprostos.keenetic.link/?import/");
         }
     }
@@ -22,21 +23,19 @@ class Sign_in extends \Core\Controller
     }
 
 
-    public function sign_in()
+    public function signInAction()
     {
 
         $email = $_POST["email"];
         $password = $_POST["password"];
 
         $users = new Users();
-        $users->CheckUser($email, $password);
-        if (!$users) {
+        if (!$users->checkUser($email, $password)) {
             echo "Такого пользователя нету"; // TODO Доделать
             die();
         }
 
-        setcookie("email", $email);
-        setcookie("password", Users::HashPassword($password));
+        setcookie("hash", md5($email.$password));
 
         header("Location: http://mrprostos.keenetic.link/?import/");
     }

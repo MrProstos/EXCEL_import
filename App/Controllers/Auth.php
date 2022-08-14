@@ -6,16 +6,14 @@ use App\Models\Users;
 
 class Auth
 {
-    public function Auth(): bool
+    public function isAuth(): bool // TODO изменить название методово , прочитать PSR наименование
     {
-        if (isset($_COOKIE["email"]) and isset($_COOKIE["password"])) {
+        if (isset($_COOKIE["hash"])) {
 
-            $email = $_COOKIE["email"];
-            $password = $_COOKIE["password"];
+            $hash = $_COOKIE["hash"];
 
-            $users = new Users();
-            $users->CheckUser($email, $password);
-            if ($users) {
+            $dbUsers = new Users();
+            if ($dbUsers->isUser($hash)) {
                 return true;
             }
         }

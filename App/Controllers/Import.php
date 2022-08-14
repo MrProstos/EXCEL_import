@@ -4,8 +4,7 @@ namespace App\Controllers;
 
 use Core\View;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use  PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Import extends \Core\Controller
 {
@@ -15,20 +14,19 @@ class Import extends \Core\Controller
         View::renderTemplate("import.html");
     }
 
-    private function loadfile() // TODO удалить или закоментить
+    private function uploadFile() // TODO удалить или закоментить
     {
-        $uploaddir = '/var/www/my_site/public/files/';
-        $uploadfile = $uploaddir . basename($_FILES['uploadFile']['name']);
+        $uploadDir = '/var/www/my_site/public/files/';
+        $uploadFile = $uploadDir . basename($_FILES['uploadFile']['name']);
 
-        echo '<pre>';
-        if (move_uploaded_file($_FILES['uploadFile']['tmp_name'], $uploadfile)) {
+        if (move_uploaded_file($_FILES['uploadFile']['tmp_name'], $uploadFile)) {
             echo "Файл корректен и был успешно загружен.\n";
         } else {
             echo "Возможная атака с помощью файловой загрузки!\n";
         }
     }
 
-    public function importAction(): void
+    public function parseUploadFileAction(): void
     {
         $spreadsheet = new Spreadsheet();
 

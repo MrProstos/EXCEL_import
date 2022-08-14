@@ -15,17 +15,18 @@ set_exception_handler("Core\Error::exceptionHandler");
  * Routing
  */
 $router = new Core\Router();
-$controller = new App\Controllers\Auth();
+$auth = new App\Controllers\Auth();
 
-if ($controller->Auth()) {
+if ($auth->isAuth()) {
     $router->add("import/",["controller" => "Import", "action" => "index"]);
-    $router->add("import/import",["controller" => "Import", "action" => "import"]);
+    $router->add("import/import",["controller" => "Import", "action" => "parseUploadFile"]);
 }
 
-$router->add("", ["controller" => "Sign_in", "action" => "index"]);
-$router->add("sign_in/",["controller"=>"Sign_in","action"=>"sign_in"]);
+$router->add("", ["controller" => "SignIn", "action" => "index"]);
+$router->add("sign_in/",["controller"=>"SignIn","action"=>"signIn"]);
 
-$router->add("sign_up/",["controller" => "Sign_up", "action" => "index"]);
-$router->add("sign_up/registration",["controller" => "Sign_up", "action" => "registration"]);
+$router->add("sign_up/",["controller" => "SignUp", "action" => "index"]);
+$router->add("sign_up/registration",["controller" => "SignUp", "action" => "registration"]);
+$router->add("sign_up/emailVerification",["controller" => "SignUp", "action" => "emailVerification"]);
 
 $router->dispatch($_SERVER['QUERY_STRING']);

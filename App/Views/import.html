@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
     <script src="http://mrprostos.keenetic.link/js/script.js"></script>
-    <script src="http://mrprostos.keenetic.link/js/formsubmit.js"></script>
+    <script src="http://mrprostos.keenetic.link/js/form-action.js"></script>
 </head>
 <body>
 <div class="box import-table__box container is-widescreen">
@@ -32,67 +32,18 @@
             <button class="button block import__button" type="submit">Загрузить прайс</button>
         </div>
     </form>
-
     <table class="table import-table m-auto">
         <thead>
-        <tr>
-            <th>
+        <tr class="thead__row">
+            <th class="thead-result__cell">
                 <div class="select">
                     <select class="select-col">
-                        <option>Артикул</option>
-                        <option>Название товара</option>
-                        <option>Поставщик</option>
-                        <option>Цена</option>
-                        <option>Кол-во</option>
-                        <option>Null</option>
-                    </select>
-                </div>
-            </th>
-            <th>
-                <div class="select">
-                    <select class="select-col">
-                        <option>Артикул</option>
-                        <option>Название товара</option>
-                        <option>Поставщик</option>
-                        <option>Цена</option>
-                        <option>Кол-во</option>
-                        <option>Null</option>
-                    </select>
-                </div>
-            </th>
-            <th>
-                <div class="select">
-                    <select class="select-col">
-                        <option>Артикул</option>
-                        <option>Название товара</option>
-                        <option>Поставщик</option>
-                        <option>Цена</option>
-                        <option>Кол-во</option>
-                        <option>Null</option>
-                    </select>
-                </div>
-            </th>
-            <th>
-                <div class="select">
-                    <select class="select-col">
-                        <option>Артикул</option>
-                        <option>Название товара</option>
-                        <option>Поставщик</option>
-                        <option>Цена</option>
-                        <option>Кол-во</option>
-                        <option>Null</option>
-                    </select>
-                </div>
-            </th>
-            <th>
-                <div class="select">
-                    <select class="select-col">
-                        <option>Артикул</option>
-                        <option>Название товара</option>
-                        <option>Поставщик</option>
-                        <option>Цена</option>
-                        <option>Кол-во</option>
-                        <option>Null</option>
+                        <option value="" selected="selected">Null</option>
+                        <option value="Артикул">Артикул</option>
+                        <option value="НазваниеТовара">Название товара</option>
+                        <option value="Поставщик">Поставщик</option>
+                        <option value="Цена">Цена</option>
+                        <option value="Кол-во">Кол-во</option>
                     </select>
                 </div>
             </th>
@@ -101,10 +52,6 @@
         <tbody class="tbody-result-import">
         <tr class="tbody-result-import__row">
             <td class="tbody-result-import__cell"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
         </tr>
         </tbody>
     </table>
