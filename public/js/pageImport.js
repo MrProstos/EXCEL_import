@@ -61,20 +61,27 @@ function ChooseSelect() {
     }
 
     $(".select-col option:selected").each(function (indexSelect, valueSelect) {
+        console.log(indexSelect, $(valueSelect).val())
         if ($(valueSelect).val() !== "") {
             dataArr["data"][$(valueSelect).val()]["index"] = indexSelect
-            console.log(indexSelect, $(valueSelect).val())
+
+
         }
     });
 
     for (let index in dataArr["data"]) {
+
         $(".tbody-result-import").children().each(function (indexRow, valueRow) {
 
             $(valueRow).children().each(function (indexCell, valueCell) {
 
-                if (indexCell === dataArr["data"][index]["index"]) {
+                if (indexCell === dataArr["data"][index]["index"] - 1) {
 
-                    dataArr["data"][index]["value"].push($(valueCell).text())
+                    if ($(valueCell).text() !== "") {
+                        
+                        dataArr["data"][index]["value"].push($(valueCell).text())
+                    }
+
                 }
             })
         })
