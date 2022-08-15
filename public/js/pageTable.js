@@ -11,21 +11,17 @@ function showTable() {
                     let price = dataTable[i]["price"]
                     let cnt = dataTable[i]["cnt"]
 
-                    $(".result-database-table").append(`<tr class="result-database-table__row-${i}"></tr>`)
-                        .append(`<td>${sku}</td>
-                        <td>${product_name}</td>
-                        <td>${supplier}</td>
-                        <td>${price}</td>
-                        <td>${cnt}</td>`)
-                }
+                    $(".tbody-result-import__row__hide").clone().attr("class", `tbody-result-import__row-${i}`).appendTo(".result-database-table")
 
-                for (let i = 0; i < dataTable[0].length; i++) {
-                    // $(".result-database-table__row").append(`<tr class="result-database-table__row"></tr>`)
+                    let cellTable = $(".tbody-result-import__cell__hide").clone().attr("class", "tbody-result-import__cell")
+
+                    cellTable.clone().text(sku).appendTo(`.tbody-result-import__row-${i}`)
+                    cellTable.clone().text(product_name).appendTo(`.tbody-result-import__row-${i}`)
+                    cellTable.clone().text(supplier).appendTo(`.tbody-result-import__row-${i}`)
+                    cellTable.clone().text(price).appendTo(`.tbody-result-import__row-${i}`)
+                    cellTable.clone().text(cnt).appendTo(`.tbody-result-import__row-${i}`)
                 }
-                console.log((dataTable))
             }
-
-
         })
     })
 }

@@ -19,7 +19,9 @@ class Table extends \Core\Controller
         $usersDb = new Users();
 
         $dataTable = $usersDb->showTablePrays($page);
+
         if ($dataTable === []) {
+
             return false;
         };
 

@@ -32,6 +32,7 @@ class SignUp extends \Core\Controller
         $users->registrationUser($username, $email, $password) or die();
 
         if ($this->sendEmailVerification($email, md5($email . $password))) {
+
             echo "Подтвердите почту";
 //            header("Location: http://mrprostos.keenetic.link/");
         }
@@ -46,19 +47,19 @@ class SignUp extends \Core\Controller
             //Server settings
 
             $mail->CharSet = 'UTF-8';
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host = "smtp.gmail.com";                     //Set the SMTP server to send through
-            $mail->SMTPAuth = true;                                   //Enable SMTP authentication
-            $mail->Username = $email;                     //SMTP username
-            $mail->Password = $_ENV["GOOGLE_PASSWORD"];                              //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+            $mail->isSMTP();
+            $mail->Host = "smtp.gmail.com";
+            $mail->SMTPAuth = true;
+            $mail->Username = $email;
+            $mail->Password = $_ENV["GOOGLE_PASSWORD"];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = 465;
 
-            $mail->addAddress('vladmihin28@gmail.com');     //Add a recipient
+            $mail->addAddress('vladmihin28@gmail.com');
 
 
-            //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
+
+            $mail->isHTML(true);
             $mail->Subject = "Подтверждение почты";
             $mail->Body = "<form action='http://mrprostos.keenetic.link/?sign_up/emailVerification' method='POST'>
                            <input type='hidden' name='hash' value='$hash'>
@@ -66,8 +67,10 @@ class SignUp extends \Core\Controller
                            </form>";
 
             $mail->send();
+
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
+
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             return false;
         }
@@ -76,13 +79,17 @@ class SignUp extends \Core\Controller
     function emailVerification()
     {
         if (isset($_POST["hash"])) {
+
             $hash = $_POST["hash"];
 
             $dbUsers = new Users();
+
             if (!$dbUsers->confirmMail($hash)) {
+
                 echo "Ошибка подтверждения";
                 return;
             }
+
             echo "Почта подтверждена";
         }
 

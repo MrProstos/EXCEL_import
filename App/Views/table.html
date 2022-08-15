@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Table</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="http://mrprostos.keenetic.link/css/style.css">
@@ -24,13 +24,22 @@
         </tr>
         </thead>
         <tbody class="result-database-table">
-
-
+        <tr class="tbody-result-import__row__hide"></tr>
+        <td class="tbody-result-import__cell__hide"></td>
         </tbody>
     </table>
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
         <a class="pagination-previous is-disabled is-centered" onclick="">Назад</a>
         <a class="pagination-next" onclick="">Вперед</a>
+        <ul class="pagination-list">
+            <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+            <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
+            <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+        </ul>
     </nav>
 </div>
 </body>

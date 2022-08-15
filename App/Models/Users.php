@@ -14,12 +14,14 @@ class Users extends \Core\Model
             $db = static::getDB();
 
             $result = $db->prepare("insert into reg_user (username, email, passwd, confirm_email) values (?,?,?,'no')");
+
             $hash = md5($email . $passwd);
             $result->execute([$username, $email, $hash]);
 
             return true;
 
         } catch (\PDOException $e) {
+
             echo $e->getMessage(); // TODO Потом удалить
 
             return false;
@@ -35,8 +37,10 @@ class Users extends \Core\Model
         $result->execute([$hash]);
 
         if ($result->rowCount() != 1) {
+
             return false;
         }
+
         return true;
     }
 
@@ -46,7 +50,8 @@ class Users extends \Core\Model
         try {
             $db = static::getDB();
 
-            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = ? and confirm_email = 'yes'"); // TODO добавить проверку активации почты
+            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = ? and confirm_email = 'yes'");
+
             $hash = md5($email . $passwd);
             $result->execute([$hash]);
 
@@ -57,10 +62,13 @@ class Users extends \Core\Model
             return true;
 
         } catch (\PDOException $e) {
+
             echo $e->getMessage();  // TODO Потом удалить
+
             return false;
         }
     }
+
 
     public function confirmMail(string $hash): bool
     {
@@ -77,6 +85,7 @@ class Users extends \Core\Model
             return true;
 
         } catch (\PDOException $e) {
+
             echo $e->getMessage();  // TODO Потом удалить
             return false;
         }
@@ -87,6 +96,7 @@ class Users extends \Core\Model
         $db = static::getDB();
 
         for ($i = 0; $i < count($data["sku"]["value"]); $i++) {
+
             try {
 
                 $sku = $data["sku"]["value"][$i];
@@ -115,7 +125,7 @@ class Users extends \Core\Model
             $db = static::getDB();
 
             $result = $db->prepare("SELECT * FROM prays LIMIT 5 OFFSET :nRow");
-            $result->bindParam(":nRow",$nRow,PDO::PARAM_INT);
+            $result->bindParam(":nRow", $nRow, PDO::PARAM_INT);
             $result->execute();
 
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

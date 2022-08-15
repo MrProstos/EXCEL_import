@@ -13,7 +13,9 @@ class Auth
             $hash = $_COOKIE["hash"];
 
             $dbUsers = new Users();
+
             if ($dbUsers->isUser($hash)) {
+
                 return true;
             }
         }

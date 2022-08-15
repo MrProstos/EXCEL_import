@@ -12,7 +12,9 @@ class SignIn extends \Core\Controller
     protected function before()
     {
         $auth = new Auth();
+
         if ($auth->isAuth()) {
+
             header("Location: http://mrprostos.keenetic.link/?import/");
         }
     }
@@ -30,9 +32,11 @@ class SignIn extends \Core\Controller
         $password = $_POST["password"];
 
         $users = new Users();
+
         if (!$users->checkUser($email, $password)) {
+
             echo "Такого пользователя нету"; // TODO Доделать
-            die();
+            return;
         }
 
         setcookie("hash", md5($email.$password));

@@ -21,8 +21,11 @@ class Import extends \Core\Controller
         $uploadFile = $uploadDir . basename($_FILES['uploadFile']['name']);
 
         if (move_uploaded_file($_FILES['uploadFile']['tmp_name'], $uploadFile)) {
+
             echo "Файл корректен и был успешно загружен.\n";
+
         } else {
+
             echo "Возможная атака с помощью файловой загрузки!\n";
         }
     }
@@ -62,12 +65,18 @@ class Import extends \Core\Controller
     {
         header("Content-type:application/json");
         if (isset($_POST["data"])) {
+
             $dataArr = $_POST["data"];
+
             $usersDb = new Users();
+
             if (!$usersDb->insertDataImport($dataArr)) {
+
                 echo json_encode(["status"=>"Ошибка импорта"]);
+
                 return;
             }
+
             echo json_encode(["status"=>"Все хорошо"]);
         }
     }
