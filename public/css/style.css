@@ -9,7 +9,7 @@
     width: 1300px;
 }
 
-.import-table,.result-table {
+.import-table, .result-table {
     width: 100%;
 }
 
@@ -29,4 +29,9 @@ html {
 .import__table-container {
     overflow: scroll; /* свойство для прокрутки по горизонтали. Автоматом, если содержимое больше блока */
 }
+
+.thead-result__cell__hide, .tbody-result-import__row__hide, .tbody-result-import__cell__hide {
+    display: none;
+}
+
 /*-------------------------------------------*/

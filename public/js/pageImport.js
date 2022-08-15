@@ -14,29 +14,15 @@ function ImportForm() {
         success: function (data) {
 
             let result = JSON.parse(data);
-
-
+            console.log(result)
             for (let i = 0; i < result[0].length; i++) {
-                let theadResultCell = `<th class="thead-result__cell">
-                <div class="select">
-                    <select class="select-col">
-                        <option value="">Null</option>
-                        <option value="sku">Артикул</option>
-                        <option value="product_name">Название товара</option>
-                        <option value="supplier">Поставщик</option>
-                        <option value="price">Цена</option>
-                        <option value="cnt">Кол-во</option>
-                    </select>
-                </div>
-            </th>`
-
-                $(".thead__row").append(theadResultCell)
+                $(".thead-result__cell__hide").clone().attr("class", "thead-result__cell").appendTo(".thead__row")
             }
 
             for (let i = 0; i < result.length; i++) {
-                $(".tbody-result-import").append(`<tr class="tbody-result-import__row-${i}"></tr>`) // TODO Исправить потом
-                for (let j = 0; j < result[i].length; j++) {
-                    $(`.tbody-result-import__row-${i}`).append(`<td class="tbody-result-import__cell">${result[i][j]}</td>`)
+                $(".tbody-result-import__row__hide").clone().attr("class", `tbody-result-import__row-${i}`).appendTo(".tbody-result-import") // TODO Исправить потом
+                for (let j = 0; j < result[0].length; j++) {
+                    $(".tbody-result-import__cell__hide").clone().attr("class", "tbody-result-import__cell").text(result[i][j]).appendTo(`.tbody-result-import__row-${i}`)
                 }
             }
         }
@@ -57,7 +43,6 @@ function SizeFile() {
         });
     });
 }
-
 
 
 function ChooseSelect() {
