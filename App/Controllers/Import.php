@@ -18,7 +18,7 @@ class Import extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('import.html');
+        View::renderTemplate('import.html.twig',['title'=>'Импорт']);
     }
 
     /**

@@ -19,7 +19,7 @@ class SignUp extends \Core\Controller
 
     public function indexAction(): void
     {
-        View::renderTemplate('sign_up.html');
+        View::renderTemplate('sign_up.html.twig',['title'=>'Регистрация']);
     }
 
     /**

@@ -4,7 +4,7 @@
 function ImportForm() {
     let formData = new FormData();
     formData.append("file", $("input[type=file]")[0].files[0]);
-    $(".import__button").attr("class","button block import__button is-primary is-loading")
+    $(".import__button").attr("class","button block import__button is-primary is-loading  ml-4")
 
     $.ajax({
         url: "?import/import",
@@ -26,7 +26,7 @@ function ImportForm() {
                 }
             }
 
-            $(".import__button").attr("class","button block import__button is-primary")
+            $(".import__button").attr("class","button block import__button is-primary ml-4")
             $(".finish-processing__button").show()
         }
     })

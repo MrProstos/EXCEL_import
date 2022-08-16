@@ -17,7 +17,7 @@ class Table extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('table.html');
+        View::renderTemplate('table.html.twig',['title'=>'Таблица']);
     }
 
     /**

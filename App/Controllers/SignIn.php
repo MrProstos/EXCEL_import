@@ -29,7 +29,7 @@ class SignIn extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('sign_in.html');
+        View::renderTemplate('sign_in.html.twig',['title'=>'Вход']);
     }
 
 
