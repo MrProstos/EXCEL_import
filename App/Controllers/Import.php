@@ -2,57 +2,48 @@
 
 namespace App\Controllers;
 
+use App\Models\Price;
 use App\Models\Users;
 use Core\View;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use  PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+/**
+ * Class serving the route Import
+ */
 class Import extends \Core\Controller
 {
-
+    /**
+     * Show page
+     * @return void
+     */
     public function indexAction(): void
     {
-        View::renderTemplate("import.html");
+        View::renderTemplate('import.html');
     }
 
-    private function uploadFile() // TODO удалить или закоментить
-    {
-        $uploadDir = '/var/www/my_site/public/files/';
-        $uploadFile = $uploadDir . basename($_FILES['uploadFile']['name']);
-
-        if (move_uploaded_file($_FILES['uploadFile']['tmp_name'], $uploadFile)) {
-
-            echo "Файл корректен и был успешно загружен.\n";
-
-        } else {
-
-            echo "Возможная атака с помощью файловой загрузки!\n";
-        }
-    }
-
+    /**
+     * Reading a file and sending an array
+     * @return void
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
     public function parseUploadFileAction(): void
     {
         $spreadsheet = new Spreadsheet();
 
         $inputFileType = 'Xlsx';
-        $inputFileName = $_FILES["file"]["tmp_name"];
-
+        $inputFileName = $_FILES['file']['tmp_name'];
 
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-
         $reader->setReadDataOnly(true);
-
         $worksheetData = $reader->listWorksheetInfo($inputFileName);
 
         $msg = [];
 
         foreach ($worksheetData as $worksheet) {
-
-            $sheetName = $worksheet["worksheetName"];
+            $sheetName = $worksheet['worksheetName'];
 
             $reader->setLoadSheetsOnly($sheetName);
             $spreadsheet = $reader->load($inputFileName);
-
             $worksheet = $spreadsheet->getActiveSheet();
 
             $msg = $worksheet->toArray();
@@ -61,23 +52,23 @@ class Import extends \Core\Controller
         echo json_encode($msg);
     }
 
+    /**
+     * Add a value to the database
+     * @return void
+     */
     public function insertTableAction()
     {
-        header("Content-type:application/json");
-        if (isset($_POST["data"])) {
+        header('Content-type:application/json');
 
-            $dataArr = $_POST["data"];
+        if (isset($_POST['data'])) {
+            $usersDb = new Price();
 
-            $usersDb = new Users();
-
-            if (!$usersDb->insertDataImport($dataArr)) {
-
-                echo json_encode(["status"=>"Ошибка импорта"]);
-
+            if (!$usersDb->insertDataImport( $_POST['data'])) {
+                echo json_encode(['status'=>'Ошибка импорта']);
                 return;
             }
 
-            echo json_encode(["status"=>"Все хорошо"]);
+            echo json_encode(['status'=>'Все хорошо']);
         }
     }
 }

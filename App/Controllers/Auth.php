@@ -4,18 +4,22 @@ namespace App\Controllers;
 
 use App\Models\Users;
 
+/**
+ * User verification class
+ */
 class Auth
 {
-    public function isAuth(): bool // TODO изменить название методово , прочитать PSR наименование
+    /**
+     * Checks if such a user exists
+     * @return bool
+     */
+    public function isAuth(): bool
     {
-        if (isset($_COOKIE["hash"])) {
-
-            $hash = $_COOKIE["hash"];
+        if (isset($_COOKIE['hash'])) {
 
             $dbUsers = new Users();
 
-            if ($dbUsers->isUser($hash)) {
-
+            if ($dbUsers->isUser($_COOKIE['hash'])) {
                 return true;
             }
         }

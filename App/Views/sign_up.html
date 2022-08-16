@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="http://mrprostos.keenetic.link/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
-    <script src="http://mrprostos.keenetic.link/js/script.js"></script>
-    <script src="http://mrprostos.keenetic.link/js/formsubmit.js"></script>
+    <script src="js/formsubmit.js"></script>
     <title>Sing up</title>
 </head>
 <body>
@@ -23,7 +22,7 @@
                 <div class="username item block">
                     <div class="username">Ваш логин</div>
                     <label>
-                        <input class="input username__input" type="text" name="username" minlength="3">
+                        <input class="input username__input" type="text" name="username">
                     </label>
                 </div>
                 <div class="email item block">
@@ -41,7 +40,7 @@
                 <div class="password_confirm item block">
                     <div>Подтвердите пароль</div>
                     <label>
-                        <input class="input password_confirm__input" type="password" name="password_confirm"  data-rule-password="true" data-rule-equalTo=".password__input" required>
+                        <input class="input password_confirm__input" type="password" name="password_confirm"  data-rule-password="true" data-rule-equalTo=".password__input">
                     </label>
                 </div>
                 <div class="block">

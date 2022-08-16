@@ -2,10 +2,10 @@
 
 namespace App;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 /**
  * Application configuration
- *
- * PHP version 7.0
  */
 class Config
 {
@@ -39,4 +39,24 @@ class Config
      * @var boolean
      */
     const SHOW_ERRORS = true;
+
+    /**
+     * Sets the settings for PHPMailer
+     * @return PHPMailer
+     */
+    static function configPHPMailer(): PHPMailer
+    {
+        $mail = new PHPMailer(true);
+
+        $mail->CharSet = 'UTF-8';
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'vladmihin28@gmail.com';
+        $mail->Password = $_ENV['GOOGLE_PASSWORD'];
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = 465;
+
+        return $mail;
+    }
 }

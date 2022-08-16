@@ -1,9 +1,10 @@
 "use strict"
 
+// Sending the form to the server and displaying the table
 function ImportForm() {
-
     let formData = new FormData();
     formData.append("file", $("input[type=file]")[0].files[0]);
+    $(".import__button").attr("class","button block import__button is-primary is-loading")
 
     $.ajax({
         url: "?import/import",
@@ -12,7 +13,6 @@ function ImportForm() {
         processData: false,
         contentType: false,
         success: function (data) {
-
             let result = JSON.parse(data);
 
             for (let i = 0; i < result[0].length; i++) {
@@ -25,20 +25,23 @@ function ImportForm() {
                     $(".tbody-result-import__cell__hide").clone().attr("class", "tbody-result-import__cell").text(result[i][j]).appendTo(`.tbody-result-import__row-${i}`)
                 }
             }
+
+            $(".import__button").attr("class","button block import__button is-primary")
+            $(".finish-processing__button").show()
         }
     })
+
+
 }
 
+// Checking file size
 function SizeFile() {
-
     const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
 
     $(document).ready(function () {
-
         $(".file__input").change(function () {
 
             if (this.files[0].size > MAX_FILE_SIZE) {
-
                 alert("Файл больше 30 MB!");
                 return
             }
@@ -47,9 +50,8 @@ function SizeFile() {
     });
 }
 
-
+// Parsing of column selection by the user
 function ChooseSelect() {
-
     let dataArr = {
         "data": {
             "sku": {"index": null, "value": []},
@@ -64,21 +66,16 @@ function ChooseSelect() {
         console.log(indexSelect, $(valueSelect).val())
         if ($(valueSelect).val() !== "") {
             dataArr["data"][$(valueSelect).val()]["index"] = indexSelect
-
-
         }
     });
 
     for (let index in dataArr["data"]) {
-
         $(".tbody-result-import").children().each(function (indexRow, valueRow) {
-
             $(valueRow).children().each(function (indexCell, valueCell) {
 
                 if (indexCell === dataArr["data"][index]["index"] - 1) {
 
                     if ($(valueCell).text() !== "") {
-                        
                         dataArr["data"][index]["value"].push($(valueCell).text())
                     }
 
@@ -86,9 +83,12 @@ function ChooseSelect() {
             })
         })
     }
-    console.log(dataArr)
 
+    console.log(dataArr)
     $.post("?import/insertTable", dataArr, function (msg, status) {
+            if (status === "success") {
+                alert('Данные импортированны')
+            }
             console.log(msg, status)
         }
     )
