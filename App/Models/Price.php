@@ -21,20 +21,22 @@ class Price extends \Core\Model
 
         for ($i = 0; $i < count($data['sku']['value']); $i++) {
             try {
-
                 $sku = $data['sku']['value'][$i] ?? null;
                 $product_name = $data['product_name']['value'][$i] ?? null;
                 $supplier = $data['supplier']['value'][$i] ?? null;
                 $price = $data['price']['value'][$i] ?? null;
                 $cnt = $data['cnt']['value'][$i] ?? null;
 
-                if (!is_string($sku) || !preg_match('/[a-zA-Z]/', $sku)) {
+                if (preg_match('/[a-zA-Z]/', $sku) !== 1) {
                     continue;
-                } elseif (!is_string($product_name) || !preg_match('/[a-zA-Z]/', $product_name)) {
+                }
+                if (preg_match('/[a-zA-Z]/', $product_name) !== 1) {
                     continue;
-                } elseif (!is_string($supplier) || !preg_match('/[a-zA-Z]/', $supplier)) {
+                }
+                if (preg_match('/[a-zA-Z]/', $supplier) !== 1) {
                     continue;
-                } elseif (!is_int((int)$price)) {
+                }
+                if (!is_int((int)$price)) {
                     continue;
                 } elseif (!is_int((int)$cnt)) {
                     continue;

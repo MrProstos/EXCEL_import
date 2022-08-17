@@ -64,6 +64,7 @@ function ValidateSignUp() {
                 },
                 password_confirm: {
                     required: "это поле обязательно для заполнения",
+                    minlength: "минимальная длинна пароля 8 символов",
                     equalTo: "пароли не совпадают"
                 }
             }
