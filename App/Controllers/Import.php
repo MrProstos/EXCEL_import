@@ -3,8 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Price;
-use App\Models\Users;
 use Core\View;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 /**
@@ -12,20 +12,21 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
  */
 class Import extends \Core\Controller
 {
+    const MAX_FILE_SIZE = 30 * 1024 * 1024;
+
     /**
      * Show page
      * @return void
      */
     public function indexAction(): void
     {
-
         View::renderTemplate('import.html.twig', ['title' => 'Импорт']);
     }
 
     /**
      * Reading a file and sending an array
      * @return void
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws Exception
      */
     public function parseUploadFileAction(): void
     {
@@ -33,6 +34,11 @@ class Import extends \Core\Controller
 
         $inputFileType = 'Xlsx';
         $inputFileName = $_FILES['file']['tmp_name'];
+
+        if (filesize($inputFileName) > self::MAX_FILE_SIZE) {
+            echo json_encode([]);
+            return;
+        }
 
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
         $reader->setReadDataOnly(true);
@@ -66,7 +72,6 @@ class Import extends \Core\Controller
                 echo json_encode(['status' => 0]);
                 return;
             }
-
             echo json_encode(['status' => $result]);
         }
     }

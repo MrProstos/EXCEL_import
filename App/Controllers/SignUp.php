@@ -71,7 +71,7 @@ class SignUp extends \Core\Controller
      * Email сonfirmation
      * @return void
      */
-    function emailVerification()
+    function emailVerification(): void
     {
         if (isset($_POST['hash'])) {
             $dbUsers = new Users();

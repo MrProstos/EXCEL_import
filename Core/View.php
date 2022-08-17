@@ -50,16 +50,4 @@ class View
 
         echo $twig->render($template, $args);
     }
-
-    public static function testRenderTemplate($template, $args = []) // TODO удалить
-    {
-        static $twig = null;
-
-        if ($twig === null) {
-            $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/App/Views');
-            $twig = new \Twig\Environment($loader);
-        }
-
-        return $twig;
-    }
 }

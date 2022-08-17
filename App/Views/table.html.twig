@@ -14,6 +14,7 @@
         <tbody class="result-database-table">
         {% for row in data['data'] %}
             <tr>
+
                 {% for cell in row %}
                     <td>{{ cell }}</td>
                 {% endfor %}
@@ -24,18 +25,17 @@
         </tbody>
     </table>
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <a class="pagination-next" href="?table/page:{{ data['nAllRow'][0] + 1 }}/show">В конец</a>
-        <a class="pagination-previous" href="?table/page:1/show">В начало</a>
+        <a class="pagination-next" href="?table/page:{{ data['nAllRow'][0]}}/show">В конец</a>
+        <a class="pagination-previous" href="?table/page:0/show">В начало</a>
         <ul class="pagination-list">
             {% for i in 0..data['nAllRow'][0] %}
 
-                {% if i < activePage + 2 and i > activePage - 4 %}
-                    {% set page = i+1 %}
+                {% if i < activePage + 3 and i > activePage - 3 %}
 
-                    {% if page == activePage %}
-                        <li><a class="pagination-link is-current" href="?table/page:{{ page }}/show">{{ page }}</a></li>
+                    {% if i == activePage %}
+                        <li><a class="pagination-link is-current" href="?table/page:{{ i }}/show">{{ i + 1 }}</a></li>
                     {% else %}
-                        <li><a class="pagination-link" href="?table/page:{{ page }}/show">{{ page }}</a></li>
+                        <li><a class="pagination-link" href="?table/page:{{ i }}/show">{{ i + 1 }}</a></li>
                     {% endif %}
                 {% endif %}
             {% endfor %}

@@ -12,7 +12,7 @@ class Price extends \Core\Model
     /**
      * Add data to the table Price
      * @param array $data
-     * @return int|bool
+     * @return int
      */
     public function insertDataImport(array $data): int
     {
@@ -28,11 +28,11 @@ class Price extends \Core\Model
                 $price = $data['price']['value'][$i] ?? null;
                 $cnt = $data['cnt']['value'][$i] ?? null;
 
-                if (!is_string($sku)) {
+                if (!is_string($sku) || !preg_match('/[a-zA-Z]/', $sku)) {
                     continue;
-                } elseif (!is_string($product_name)) {
+                } elseif (!is_string($product_name) || !preg_match('/[a-zA-Z]/', $product_name)) {
                     continue;
-                } elseif (!is_string($supplier)) {
+                } elseif (!is_string($supplier) || !preg_match('/[a-zA-Z]/', $supplier)) {
                     continue;
                 } elseif (!is_int((int)$price)) {
                     continue;
@@ -63,8 +63,9 @@ class Price extends \Core\Model
         try {
             $dataArr = ['nAllRow' => null, 'data' => []];
             $db = static::getDB();
+            $nRow *= 5;
 
-            $result = $db->prepare("SELECT sku, product_name, supplier, price, cnt FROM price LIMIT 5 OFFSET ?");
+            $result = $db->prepare("SELECT price.sku, price.product_name, price.supplier, price.price, price.cnt FROM price LIMIT 5 OFFSET ?");
             $result->bindParam(1, $nRow, PDO::PARAM_INT);
             $result->execute();
 

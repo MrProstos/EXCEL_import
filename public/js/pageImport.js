@@ -4,7 +4,7 @@
 function ImportForm() {
     let formData = new FormData();
     formData.append("file", $("input[type=file]")[0].files[0]);
-    $(".import__button").attr("class","button block import__button is-primary is-loading  ml-4")
+    $(".import__button").attr("class", "button block import__button is-primary is-loading  ml-4")
 
     $.ajax({
         url: "?import/import",
@@ -14,6 +14,13 @@ function ImportForm() {
         contentType: false,
         success: function (data) {
             let result = JSON.parse(data);
+            let button = $(".import__button")
+
+            if (result.length === 0) {
+                button.attr("class", "button block import__button  ml-4")
+                alert('Размер файла превышает допустимый предел')
+                return
+            }
 
             for (let i = 0; i < result[0].length; i++) {
                 $(".thead-result__cell__hide").clone().attr("class", "thead-result__cell").appendTo(".thead__row")
@@ -21,13 +28,13 @@ function ImportForm() {
 
             for (let i = 0; i < result.length; i++) {
                 $(".tbody-result-import__row__hide").clone().attr("class", `tbody-result-import__row-${i}`).appendTo(".tbody-result-import")
+
                 for (let j = 0; j < result[0].length; j++) {
                     $(".tbody-result-import__cell__hide").clone().attr("class", "tbody-result-import__cell").text(result[i][j]).appendTo(`.tbody-result-import__row-${i}`)
                 }
             }
-
-            $(".import__button").attr("class","button block import__button  ml-4")
             $(".finish-processing__button").show()
+            button.attr("class", "button block import__button  ml-4")
         }
     })
 
@@ -52,7 +59,7 @@ function SizeFile() {
 
 // Parsing of column selection by the user
 function ChooseSelect() {
-    $(".finish-processing__button").attr('class','finish-processing__button button finish-processing__button box is-primary is-loading')
+    $(".finish-processing__button").attr('class', 'finish-processing__button button finish-processing__button box is-primary is-loading')
     let dataArr = {
         "data": {
             "sku": {"index": Number, "value": []},
@@ -64,7 +71,7 @@ function ChooseSelect() {
     }
 
     $(".select-col option:selected").each(function (indexSelect, valueSelect) {
-        console.log(indexSelect, $(valueSelect).val())
+
         if ($(valueSelect).val() !== "") {
             dataArr["data"][$(valueSelect).val()]["index"] = indexSelect
         }
@@ -79,7 +86,6 @@ function ChooseSelect() {
                     if ($(valueCell).text() !== "") {
                         dataArr["data"][index]["value"].push($(valueCell).text())
                     }
-
                 }
             })
         })
@@ -88,9 +94,10 @@ function ChooseSelect() {
     console.log(dataArr)
     $.post("?import/insertTable", dataArr, function (msg, status) {
             if (status === "success") {
-                $(".finish-processing__button").attr('class','finish-processing__button button finish-processing__button box')
+                $(".finish-processing__button").attr('class', 'finish-processing__button button finish-processing__button box')
+
                 if (msg['status'] !== 0) {
-                    alert(`Импортировано ${msg['status']} строк`)
+                    alert(`Импортировано строк - ${msg['status']}`)
                 } else {
                     alert('Данные не импортированы')
                 }

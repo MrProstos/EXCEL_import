@@ -19,13 +19,18 @@ class Table extends \Core\Controller
     {
         $matches = [];
         preg_match_all("/\d+/", $_SERVER['REQUEST_URI'], $matches);
-        $activePage = $matches[0][0] <= 0 ? 1 : $matches[0][0]; //The index is shifted by +1, for better readability to the user
+        $activePage = $matches[0][0];
 
-        $data = $this->pageAction((int)$activePage - 1); //So we subtract -1 to find the right page
+        $data = $this->pageAction((int)$activePage);
         View::renderTemplate('table.html.twig', ['title' => 'Таблица', 'data' => $data, 'activePage' => $activePage]);
     }
 
-    private function pageAction(int $page = 0): bool|array
+    /**
+     * Returns page data
+     * @param int $page
+     * @return bool|array
+     */
+    private function pageAction(int $page): bool|array
     {
         $usersDb = new Price();
         $dataTable = $usersDb->showTablePrays($page);
