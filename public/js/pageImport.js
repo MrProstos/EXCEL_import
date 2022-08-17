@@ -90,7 +90,7 @@ function ChooseSelect() {
             if (status === "success") {
                 $(".finish-processing__button").attr('class','finish-processing__button button finish-processing__button box')
                 if (msg['status'] !== 0) {
-                    alert('Данные импортированы')
+                    alert(`Импортировано ${msg['status']} строк`)
                 } else {
                     alert('Данные не импортированы')
                 }

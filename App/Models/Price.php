@@ -21,11 +21,12 @@ class Price extends \Core\Model
 
         for ($i = 0; $i < count($data['sku']['value']); $i++) {
             try {
-                $sku = $data['sku']['value'][$i];
-                $product_name = $data['product_name']['value'][$i];
-                $supplier = $data['supplier']['value'][$i];
-                $price = $data['price']['value'][$i];
-                $cnt = $data['cnt']['value'][$i];
+
+                $sku = $data['sku']['value'][$i] ?? null;
+                $product_name = $data['product_name']['value'][$i] ?? null;
+                $supplier = $data['supplier']['value'][$i] ?? null;
+                $price = $data['price']['value'][$i] ?? null;
+                $cnt = $data['cnt']['value'][$i] ?? null;
 
                 if (!is_string($sku)) {
                     continue;
@@ -33,9 +34,9 @@ class Price extends \Core\Model
                     continue;
                 } elseif (!is_string($supplier)) {
                     continue;
-                } elseif (!is_int($price)) {
+                } elseif (!is_int((int)$price)) {
                     continue;
-                } elseif (!is_int($cnt)) {
+                } elseif (!is_int((int)$cnt)) {
                     continue;
                 }
 
@@ -57,13 +58,13 @@ class Price extends \Core\Model
      * @return array
      */
     public
-    function showTablePrays(int $nRow = 0): array
+    function showTablePrays(int $nRow): array
     {
         try {
             $dataArr = ['nAllRow' => null, 'data' => []];
             $db = static::getDB();
 
-            $result = $db->prepare("SELECT * FROM price LIMIT 5 OFFSET ?");
+            $result = $db->prepare("SELECT sku, product_name, supplier, price, cnt FROM price LIMIT 5 OFFSET ?");
             $result->bindParam(1, $nRow, PDO::PARAM_INT);
             $result->execute();
 

@@ -17,28 +17,22 @@ class Table extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('table.html.twig', ['title' => 'Таблица']);
+        $matches = [];
+        preg_match_all("/\d+/", $_SERVER['REQUEST_URI'], $matches);
+        $activePage = $matches[0][0] <= 0 ? 1 : $matches[0][0]; //The index is shifted by +1, for better readability to the user
+
+        $data = $this->pageAction((int)$activePage - 1); //So we subtract -1 to find the right page
+        View::renderTemplate('table.html.twig', ['title' => 'Таблица', 'data' => $data, 'activePage' => $activePage]);
     }
 
-    /**
-     * Update Table page
-     * @return false|void
-     */
-    public function updateAction()
+    private function pageAction(int $page = 0): bool|array
     {
         $usersDb = new Price();
-        $dataTable = $usersDb->showTablePrays($_POST['page']);
+        $dataTable = $usersDb->showTablePrays($page);
 
         if ($dataTable === []) {
             return false;
         }
-        echo json_encode($dataTable);
-    }
-
-    public function showPageAction(): void
-    {
-        $matches = [];
-        preg_match_all("/\d+/", $_SERVER['REQUEST_URI'],$matches);
-        echo $matches[0][0];
+        return $dataTable;
     }
 }

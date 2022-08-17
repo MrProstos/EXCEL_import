@@ -34,10 +34,3 @@ function showTable() {
         })
     })
 }
-
-
-function showPage() {
-    $("li .pagination-link").click(function () {
-        console.log(this);
-    })
-}

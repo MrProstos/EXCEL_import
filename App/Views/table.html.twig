@@ -1,9 +1,5 @@
 {% include 'head.html.twig' %}
 <body>
-<script>
-    showTable();
-    showPage();
-</script>
 <div class="box result-table__box container is-widescreen">
     <table class="table result-table">
         <thead>
@@ -16,14 +12,33 @@
         </tr>
         </thead>
         <tbody class="result-database-table">
+        {% for row in data['data'] %}
+            <tr>
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
         <tr class="tbody-result-import__row__hide"></tr>
         <td class="tbody-result-import__cell__hide"></td>
         </tbody>
     </table>
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <a class="pagination-previous is-disabled is-centered" onclick="">Назад</a>
-        <a class="pagination-next" onclick="">Вперед</a>
+        <a class="pagination-next" href="?table/page:{{ data['nAllRow'][0] + 1 }}/show">В конец</a>
+        <a class="pagination-previous" href="?table/page:1/show">В начало</a>
         <ul class="pagination-list">
+            {% for i in 0..data['nAllRow'][0] %}
+
+                {% if i < activePage + 2 and i > activePage - 4 %}
+                    {% set page = i+1 %}
+
+                    {% if page == activePage %}
+                        <li><a class="pagination-link is-current" href="?table/page:{{ page }}/show">{{ page }}</a></li>
+                    {% else %}
+                        <li><a class="pagination-link" href="?table/page:{{ page }}/show">{{ page }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
         </ul>
     </nav>
 </div>

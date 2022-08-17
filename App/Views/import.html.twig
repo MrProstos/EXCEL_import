@@ -1,53 +1,57 @@
 {% include 'head.html.twig' %}
 <body>
-<div class="box import-table__box">
-    <script>
-        SizeFile();
-    </script>
-    <form class="import__form form block" method="post" action="javascript:ImportForm();" enctype="multipart/form-data">
-        <div class="file has-name block">
-            <label class="file-label">
-                <input class="input file__input file-input" type="file" name="uploadFile" accept=".xls,.xlsx" required>
-                <span class="file-cta">
+{% block body %}
+    <div class="box import-table__box">
+        <script>
+            SizeFile();
+        </script>
+        <form class="import__form form block" method="post" action="javascript:ImportForm();"
+              enctype="multipart/form-data">
+            <div class="file has-name block">
+                <label class="file-label">
+                    <input class="input file__input file-input" type="file" name="uploadFile" accept=".xls,.xlsx"
+                           required>
+                    <span class="file-cta">
                     <span class="file-icon"><i class="fas fa-upload"></i></span>
                     <span class="file-label">Выберите файл</span>
                 </span>
-                <span class="file-name"></span>
-                <button class="button block import__button ml-4" type="submit">Загрузить прайс</button>
-            </label>
+                    <span class="file-name"></span>
+                    <button class="button block import__button ml-4" type="submit">Загрузить прайс</button>
+                </label>
+            </div>
+        </form>
+        <div class="import__table-container is-flex-tablet-only">
+            <table class="table import-table m-auto">
+                <thead>
+                <tr class="thead__row">
+                    <th class="thead-result__cell__hide">
+                        <div class="select">
+                            <select class="select-col">
+                                <option value="">Null</option>
+                                <option value="sku">Артикул</option>
+                                <option value="product_name">Название товара</option>
+                                <option value="supplier">Поставщик</option>
+                                <option value="price">Цена</option>
+                                <option value="cnt">Кол-во</option>
+                            </select>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="tbody-result-import">
+                <tr class="tbody-result-import__row__hide"></tr>
+                <td class="tbody-result-import__cell__hide"></td>
+                </tbody>
+            </table>
         </div>
-    </form>
-    <div class="import__table-container is-flex-tablet-only">
-        <table class="table import-table m-auto">
-            <thead>
-            <tr class="thead__row">
-                <th class="thead-result__cell__hide">
-                    <div class="select">
-                        <select class="select-col">
-                            <option value="">Null</option>
-                            <option value="sku">Артикул</option>
-                            <option value="product_name">Название товара</option>
-                            <option value="supplier">Поставщик</option>
-                            <option value="price">Цена</option>
-                            <option value="cnt">Кол-во</option>
-                        </select>
-                    </div>
-                </th>
-            </tr>
-            </thead>
-            <tbody class="tbody-result-import">
-            <tr class="tbody-result-import__row__hide"></tr>
-            <td class="tbody-result-import__cell__hide"></td>
-            </tbody>
-        </table>
-    </div>
-    <div class="block mt-5">
-        <button class="button finish-processing__button box" type="button" onclick="ChooseSelect();"><b>Завершить
-            обработку</b></button>
-        <div class="block">
-            <a class="tag is-link is-light is-rounded" href="?table/">Таблица</a>
+        <div class="block mt-5">
+            <button class="button finish-processing__button box" type="button" onclick="ChooseSelect();"><b>Завершить
+                    обработку</b></button>
+            <div class="block">
+                <a class="tag is-link is-light is-rounded" href="?table/page:0/show">Таблица</a>
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}
 </body>
 </html>
