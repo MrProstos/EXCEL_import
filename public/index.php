@@ -1,14 +1,14 @@
 <?php
 
-require dirname(__DIR__) . "/vendor/autoload.php";
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: *');
 /**
  * Error and Exception handling
  */
 error_reporting(E_ALL);
-set_error_handler("Core\Error::errorHandler");
-set_exception_handler("Core\Error::exceptionHandler");
+set_error_handler('Core\Error::errorHandler');
+set_exception_handler('Core\Error::exceptionHandler');
 
 
 /**
@@ -18,19 +18,20 @@ $router = new Core\Router();
 $auth = new App\Controllers\Auth();
 
 if ($auth->isAuth()) {
-    $router->add("import/",["controller" => "Import", "action" => "index"]);
-    $router->add("import/import",["controller" => "Import", "action" => "parseUploadFile"]);
-    $router->add("import/insertTable",["controller" => "Import", "action" => "insertTable"]);
+    $router->add('import/', ['controller' => 'Import', 'action' => 'index']);
+    $router->add('import/import', ['controller' => 'Import', 'action' => 'parseUploadFile']);
+    $router->add('import/insertTable', ['controller' => 'Import', 'action' => 'insertTable']);
 
-    $router->add("table/",["controller"=>"Table","action"=>"index"]);
-    $router->add("table/update",["controller"=>"Table","action"=>"update"]);
+    $router->add('table/', ['controller' => 'Table', 'action' => 'index']);
+    $router->add('table/update', ['controller' => 'Table', 'action' => 'update']);
+    $router->add('table/page:\d+/show', ['controller' => 'Table', 'action' => 'showPage']);
 }
 
 $router->add("", ["controller" => "SignIn", "action" => "index"]);
-$router->add("sign_in/",["controller"=>"SignIn","action"=>"signIn"]);
+$router->add("sign_in/", ["controller" => "SignIn", "action" => "signIn"]);
 
-$router->add("sign_up/",["controller" => "SignUp", "action" => "index"]);
-$router->add("sign_up/registration",["controller" => "SignUp", "action" => "registration"]);
-$router->add("sign_up/emailVerification",["controller" => "SignUp", "action" => "emailVerification"]);
+$router->add("sign_up/", ["controller" => "SignUp", "action" => "index"]);
+$router->add("sign_up/registration", ["controller" => "SignUp", "action" => "registration"]);
+$router->add("sign_up/emailVerification", ["controller" => "SignUp", "action" => "emailVerification"]);
 
 $router->dispatch($_SERVER['QUERY_STRING']);

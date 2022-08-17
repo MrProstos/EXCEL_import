@@ -18,7 +18,7 @@ class Import extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('import.html.twig',['title'=>'Импорт']);
+        View::renderTemplate('import.html.twig', ['title' => 'Импорт']);
     }
 
     /**
@@ -40,9 +40,6 @@ class Import extends \Core\Controller
         $msg = [];
 
         foreach ($worksheetData as $worksheet) {
-            $sheetName = $worksheet['worksheetName'];
-
-            $reader->setLoadSheetsOnly($sheetName);
             $spreadsheet = $reader->load($inputFileName);
             $worksheet = $spreadsheet->getActiveSheet();
 
@@ -56,19 +53,20 @@ class Import extends \Core\Controller
      * Add a value to the database
      * @return void
      */
-    public function insertTableAction()
+    public function insertTableAction(): void
     {
         header('Content-type:application/json');
 
         if (isset($_POST['data'])) {
             $usersDb = new Price();
+            $result = $usersDb->insertDataImport($_POST['data']);
 
-            if (!$usersDb->insertDataImport( $_POST['data'])) {
-                echo json_encode(['status'=>'Ошибка импорта']);
+            if ($result === 0) {
+                echo json_encode(['status' => 0]);
                 return;
             }
 
-            echo json_encode(['status'=>'Все хорошо']);
+            echo json_encode(['status' => $result]);
         }
     }
 }

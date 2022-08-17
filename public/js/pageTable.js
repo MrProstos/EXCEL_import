@@ -28,9 +28,16 @@ function showTable() {
 
                 for (let i = 0; i < Number(data["nAllRow"][0]); i++) {
                     let nPage = i + 1
-                    $(".pagination-list").append(`<li><a onclick="showPage()" class="pagination-link">${nPage}</a></li>`)
+                    $(".pagination-list").append(`<li><a class="pagination-link" data-page="${i}">${nPage}</a></li>`)
                 }
             }
         })
+    })
+}
+
+
+function showPage() {
+    $("li .pagination-link").click(function () {
+        console.log(this);
     })
 }

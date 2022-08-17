@@ -17,7 +17,7 @@ class Table extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('table.html.twig',['title'=>'Таблица']);
+        View::renderTemplate('table.html.twig', ['title' => 'Таблица']);
     }
 
     /**
@@ -35,4 +35,10 @@ class Table extends \Core\Controller
         echo json_encode($dataTable);
     }
 
+    public function showPageAction(): void
+    {
+        $matches = [];
+        preg_match_all("/\d+/", $_SERVER['REQUEST_URI'],$matches);
+        echo $matches[0][0];
+    }
 }

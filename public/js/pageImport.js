@@ -26,7 +26,7 @@ function ImportForm() {
                 }
             }
 
-            $(".import__button").attr("class","button block import__button is-primary ml-4")
+            $(".import__button").attr("class","button block import__button  ml-4")
             $(".finish-processing__button").show()
         }
     })
@@ -52,13 +52,14 @@ function SizeFile() {
 
 // Parsing of column selection by the user
 function ChooseSelect() {
+    $(".finish-processing__button").attr('class','finish-processing__button button finish-processing__button box is-primary is-loading')
     let dataArr = {
         "data": {
-            "sku": {"index": null, "value": []},
-            "product_name": {"index": null, "value": []},
-            "supplier": {"index": null, "value": []},
-            "price": {"index": null, "value": []},
-            "cnt": {"index": null, "value": []}
+            "sku": {"index": Number, "value": []},
+            "product_name": {"index": Number, "value": []},
+            "supplier": {"index": Number, "value": []},
+            "price": {"index": Number, "value": []},
+            "cnt": {"index": Number, "value": []}
         }
     }
 
@@ -87,7 +88,12 @@ function ChooseSelect() {
     console.log(dataArr)
     $.post("?import/insertTable", dataArr, function (msg, status) {
             if (status === "success") {
-                alert('Данные импортированны')
+                $(".finish-processing__button").attr('class','finish-processing__button button finish-processing__button box')
+                if (msg['status'] !== 0) {
+                    alert('Данные импортированы')
+                } else {
+                    alert('Данные не импортированы')
+                }
             }
             console.log(msg, status)
         }

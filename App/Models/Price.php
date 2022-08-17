@@ -12,11 +12,12 @@ class Price extends \Core\Model
     /**
      * Add data to the table Price
      * @param array $data
-     * @return bool
+     * @return int|bool
      */
-    public function insertDataImport(array $data): bool
+    public function insertDataImport(array $data): int
     {
         $db = static::getDB();
+        $nRow = 0;
 
         for ($i = 0; $i < count($data['sku']['value']); $i++) {
             try {
@@ -26,14 +27,28 @@ class Price extends \Core\Model
                 $price = $data['price']['value'][$i];
                 $cnt = $data['cnt']['value'][$i];
 
+                if (!is_string($sku)) {
+                    continue;
+                } elseif (!is_string($product_name)) {
+                    continue;
+                } elseif (!is_string($supplier)) {
+                    continue;
+                } elseif (!is_int($price)) {
+                    continue;
+                } elseif (!is_int($cnt)) {
+                    continue;
+                }
+
                 $result = $db->prepare("INSERT INTO price (sku, product_name, supplier, price, cnt) VALUES (?,?,?,?,?)");
                 $result->execute([$sku, $product_name, $supplier, $price, $cnt]);
-            } catch (\PDOException $e) {
+                $nRow++;
+            } catch
+            (\PDOException $e) {
                 echo $e->getMessage();
-                return false;
+                return 0;
             }
         }
-        return true;
+        return $nRow;
     }
 
     /**
@@ -41,7 +56,8 @@ class Price extends \Core\Model
      * @param int $nRow
      * @return array
      */
-    public function showTablePrays(int $nRow = 0): array
+    public
+    function showTablePrays(int $nRow = 0): array
     {
         try {
             $dataArr = ['nAllRow' => null, 'data' => []];
