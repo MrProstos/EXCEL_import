@@ -47,7 +47,6 @@ class SignIn extends \Core\Controller
             echo 'Такого пользователя нету'; // TODO Доделать
             return;
         }
-
         setcookie('hash', md5($email . $password));
         header('Location: ?import/');
     }
