@@ -75,7 +75,7 @@ class Price extends \Core\Model
                 $dataArr['data'][] = $row;
             }
 
-            $result = $db->query("SELECT ROUND(COUNT(*)/5) AS nAllRow FROM price");
+            $result = $db->query("SELECT ROUND(COUNT(*)/5 - 1) AS nAllRow FROM price");
             foreach ($result as $item) {
                 $dataArr['nAllRow'] = $item;
             }
