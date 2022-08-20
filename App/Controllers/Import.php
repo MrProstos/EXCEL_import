@@ -13,6 +13,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Import extends \Core\Controller
 {
     const MAX_FILE_SIZE = 30 * 1024 * 1024;
+    const INVALID_FILE_FORMAT = 1;
+    const INVALID_FILE_SIZE = 2;
 
     /**
      * Show page
@@ -20,7 +22,7 @@ class Import extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('import.html.twig', ['title' => 'Импорт']);
+        View::renderTemplate('import.twig', ['title' => 'Импорт']);
     }
 
     /**
@@ -31,29 +33,32 @@ class Import extends \Core\Controller
     public function parseUploadFileAction(): void
     {
         $spreadsheet = new Spreadsheet();
+        try {
+            $inputFileType = 'Xlsx';
+            $inputFileName = $_FILES['file']['tmp_name'];
 
-        $inputFileType = 'Xlsx';
-        $inputFileName = $_FILES['file']['tmp_name'];
+            if (filesize($inputFileName) > self::MAX_FILE_SIZE) {
+                echo json_encode(self::INVALID_FILE_SIZE);
+                return;
+            }
 
-        if (filesize($inputFileName) > self::MAX_FILE_SIZE) {
-            echo json_encode([]);
-            return;
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $reader->setReadDataOnly(true);
+            $worksheetData = $reader->listWorksheetInfo($inputFileName);
+
+            $msg = [];
+
+            foreach ($worksheetData as $worksheet) {
+                $spreadsheet = $reader->load($inputFileName);
+                $worksheet = $spreadsheet->getActiveSheet();
+
+                $msg = $worksheet->toArray();
+            }
+
+            echo json_encode($msg);
+        } catch (\Exception) {
+            echo json_encode(self::INVALID_FILE_FORMAT);
         }
-
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-        $reader->setReadDataOnly(true);
-        $worksheetData = $reader->listWorksheetInfo($inputFileName);
-
-        $msg = [];
-
-        foreach ($worksheetData as $worksheet) {
-            $spreadsheet = $reader->load($inputFileName);
-            $worksheet = $spreadsheet->getActiveSheet();
-
-            $msg = $worksheet->toArray();
-        }
-
-        echo json_encode($msg);
     }
 
     /**
@@ -65,8 +70,8 @@ class Import extends \Core\Controller
         header('Content-type:application/json');
 
         if (isset($_POST['data'])) {
-            $usersDb = new Price();
-            $result = $usersDb->insertDataImport($_POST['data']);
+            $db = new Price();
+            $result = $db->insertDataImport($_POST['data']);
 
             if ($result === 0) {
                 echo json_encode(['status' => 0]);

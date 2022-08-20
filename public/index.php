@@ -15,14 +15,14 @@ set_exception_handler('Core\Error::exceptionHandler');
  * Routing
  */
 $router = new Core\Router();
-$auth = new App\Controllers\Auth();
+$db = new App\Models\Users();
 
-if ($auth->isAuth()) {
+if ($db->isAuth()) {
     $router->add('import/', ['controller' => 'Import', 'action' => 'index']);
     $router->add('import/import', ['controller' => 'Import', 'action' => 'parseUploadFile']);
     $router->add('import/insertTable', ['controller' => 'Import', 'action' => 'insertTable']);
 
-    $router->add('table/page:\d+/show', ['controller' => 'Table', 'action' => 'index']);
+    $router->add('table/page{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
 }
 
 $router->add("", ["controller" => "SignIn", "action" => "index"]);

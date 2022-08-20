@@ -1,4 +1,4 @@
-"use strict"
+'use strict'
 
 // Sending the form to the server and displaying the table
 function ImportForm() {
@@ -19,9 +19,14 @@ function ImportForm() {
             let result = JSON.parse(data);
             let button = $(".import__button")
 
-            if (result.length === 0) {
+            if (result === 2) {
                 button.attr('class', 'button block import__button  ml-4')
                 alert('Размер файла превышает допустимый предел')
+                return
+            }
+            if (result === 1) {
+                button.attr('class', 'button block import__button  ml-4')
+                alert('Неверный формат файла')
                 return
             }
 
@@ -39,27 +44,27 @@ function ImportForm() {
             $(".finish-processing__button").show()
             button.attr('class', 'button block import__button  ml-4')
             $('.import__table-container').show()
-        }
+        },
     })
 
 
 }
 
-// Checking file size
-function SizeFile() {
-    const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
-
-    $(document).ready(function () {
-        $(".file__input").change(function () {
-
-            if (this.files[0].size > MAX_FILE_SIZE) {
-                alert('Файл больше 30 MB!');
-                return
-            }
-            $(".file-name").text(this.files[0]['name'])
-        });
-    });
-}
+// // Checking file size
+// function SizeFile() {
+//     const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
+//
+//     $(document).ready(function () {
+//         $(".file__input").change(function () {
+//
+//             if (this.files[0].size > MAX_FILE_SIZE) {
+//                 alert('Файл больше 30 MB!');
+//                 return
+//             }
+//             $(".file-name").text(this.files[0]['name'])
+//         });
+//     });
+// }
 
 // Parsing of column selection by the user
 function ChooseSelect() {
@@ -96,12 +101,12 @@ function ChooseSelect() {
     }
 
     console.log(dataArr)
-    $.post("?import/insertTable", dataArr, function (msg, status) {
+    $.post('?import/insertTable', dataArr, function (msg, status) {
             if (status === "success") {
                 $(".finish-processing__button").attr('class', 'finish-processing__button button finish-processing__button box')
 
                 if (msg['status'] !== 0) {
-                    alert(`Импортировано строк - ${msg['status']}`)
+                    alert('Импортировано строк - ' + msg['status'])
                 } else {
                     alert('Данные не импортированы')
                 }

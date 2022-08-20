@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
-
-
 /**
  * Methods for working with user
  */
@@ -23,13 +20,11 @@ class Users extends \Core\Model
         try {
             $db = static::getDB();
 
-            $result = $db->prepare("insert into reg_user (username, email, passwd, confirm_email) values (?,?,MD5(CONCAT(?,?)),'no')");
+            $result = $db->prepare("INSERT INTO reg_user (username, email, passwd, confirm_email) VALUES (?, ?, MD5(CONCAT(?, ?)), 'no')");
             $result->execute([$username, $email, $email, $passwd]);
 
             return true;
-        } catch (\PDOException $e) {
-            echo $e->getMessage(); // TODO Потом удалить
-
+        } catch (\PDOException) {
             return false;
         }
     }
@@ -37,7 +32,7 @@ class Users extends \Core\Model
 
     /**
      * Checking the existence of the user
-     * @param string $hash
+     * @param string $hash Email and password concatenation
      * @return bool
      */
     public function isUser(string $hash): bool
@@ -66,7 +61,7 @@ class Users extends \Core\Model
         try {
             $db = static::getDB();
 
-            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = MD5(CONCAT(?,?)) and confirm_email = 'yes'");
+            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = MD5(CONCAT(?,?)) AND confirm_email = 'yes'");
             $result->execute([$email, $passwd]);
 
             if ($result->rowCount() != 1) {
@@ -74,15 +69,14 @@ class Users extends \Core\Model
             }
 
             return true;
-        } catch (\PDOException $e) {
-            echo $e->getMessage();  // TODO Потом удалить
+        } catch (\PDOException) {
             return false;
         }
     }
 
     /**
      * Email сonfirmation
-     * @param string $hash
+     * @param string $hash Email and password concatenation
      * @return bool
      */
     public function confirmMail(string $hash): bool
@@ -98,10 +92,23 @@ class Users extends \Core\Model
             }
 
             return true;
-        } catch (\PDOException $e) {
-            echo $e->getMessage();  // TODO Потом удалить
-
+        } catch (\PDOException) {
             return false;
         }
+    }
+
+    /**
+     * Checks if the user has cookies
+     * @return bool
+     */
+    public function isAuth(): bool
+    {
+        if (isset($_COOKIE['hash'])) {
+
+            if ($this->isUser($_COOKIE['hash'])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

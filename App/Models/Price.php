@@ -11,12 +11,13 @@ class Price extends \Core\Model
 {
     /**
      * Add data to the table Price
-     * @param array $data
-     * @return int
+     * @param array $data JSON data from the user
+     * @return int Number of recorded lines
      */
     public function insertDataImport(array $data): int
     {
         $db = static::getDB();
+        $db->exec('TRUNCATE TABLE price');
         $nRow = 0;
 
         for ($i = 0; $i < count($data['sku']['value']); $i++) {
@@ -26,21 +27,6 @@ class Price extends \Core\Model
                 $supplier = $data['supplier']['value'][$i] ?? null;
                 $price = $data['price']['value'][$i] ?? null;
                 $cnt = $data['cnt']['value'][$i] ?? null;
-
-                if (preg_match('/[a-zA-Z]/', $sku) !== 1) {
-                    continue;
-                }
-                if (preg_match('/[a-zA-Z]/', $product_name) !== 1) {
-                    continue;
-                }
-                if (preg_match('/[a-zA-Z]/', $supplier) !== 1) {
-                    continue;
-                }
-                if (!is_int((int)$price)) {
-                    continue;
-                } elseif (!is_int((int)$cnt)) {
-                    continue;
-                }
 
                 $result = $db->prepare("INSERT INTO price (sku, product_name, supplier, price, cnt) VALUES (?,?,?,?,?)");
                 $result->execute([$sku, $product_name, $supplier, $price, $cnt]);
@@ -56,18 +42,17 @@ class Price extends \Core\Model
 
     /**
      * Show data from the table price
-     * @param int $nRow
-     * @return array
+     * @param int $nRow Active page number
+     * @return array Page data | Returns an empty array in case of an error
      */
-    public
-    function showTablePrays(int $nRow): array
+    public function showTablePrice(int $nRow): array
     {
         try {
             $dataArr = ['nAllRow' => null, 'data' => []];
             $db = static::getDB();
             $nRow *= 5;
 
-            $result = $db->prepare("SELECT price.sku, price.product_name, price.supplier, price.price, price.cnt FROM price LIMIT 5 OFFSET ?");
+            $result = $db->prepare('SELECT price.sku, price.product_name, price.supplier, price.price, price.cnt FROM price LIMIT 5 OFFSET ?');
             $result->bindParam(1, $nRow, PDO::PARAM_INT);
             $result->execute();
 
@@ -75,9 +60,9 @@ class Price extends \Core\Model
                 $dataArr['data'][] = $row;
             }
 
-            $result = $db->query("SELECT ROUND(COUNT(*)/5 - 1) AS nAllRow FROM price");
+            $result = $db->query('SELECT COUNT(*) AS nAllRow FROM price');
             foreach ($result as $item) {
-                $dataArr['nAllRow'] = $item;
+                $dataArr['nAllRow'] = $item['nAllRow'] / 5 - 1;
             }
 
             return $dataArr;

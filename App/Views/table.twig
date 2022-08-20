@@ -1,4 +1,4 @@
-{% include 'head.html.twig' %}
+{% include 'head.twig' %}
 <body>
 <div class="box result-table__box container is-widescreen">
     <table class="table result-table">
@@ -25,17 +25,17 @@
         </tbody>
     </table>
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <a class="pagination-next" href="?table/page:{{ data['nAllRow'][0]}}/show">В конец</a>
-        <a class="pagination-previous" href="?table/page:0/show">В начало</a>
+        <a class="pagination-next" href="?table/page{{ data['nAllRow'][0]}}">В конец</a>
+        <a class="pagination-previous" href="?table/page0">В начало</a>
         <ul class="pagination-list">
-            {% for i in 0..data['nAllRow'][0] %}
+            {% for i in 0..data['nAllRow'] %}
 
                 {% if i < activePage + 3 and i > activePage - 3 %}
 
                     {% if i == activePage %}
-                        <li><a class="pagination-link is-current" href="?table/page:{{ i }}/show">{{ i + 1 }}</a></li>
+                        <li><a class="pagination-link is-current" href="?table/page{{ i }}">{{ i + 1 }}</a></li>
                     {% else %}
-                        <li><a class="pagination-link" href="?table/page:{{ i }}/show">{{ i + 1 }}</a></li>
+                        <li><a class="pagination-link" href="?table/page{{ i }}">{{ i + 1 }}</a></li>
                     {% endif %}
                 {% endif %}
             {% endfor %}

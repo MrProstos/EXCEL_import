@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 function ValidateSignIn() {
     $(document).ready(function () {
@@ -15,12 +15,12 @@ function ValidateSignIn() {
             },
             messages: {
                 email: {
-                    required: "это поле обязательно для заполнения",
-                    email: "email некорректный"
+                    required: 'это поле обязательно для заполнения',
+                    email: 'email некорректный'
                 },
                 password: {
-                    required: "это поле обязательно для заполнения",
-                    minlength: "минимальная длинна пароля 8 символов"
+                    required: 'это поле обязательно для заполнения',
+                    minlength: 'минимальная длинна пароля 8 символов'
                 }
             }
         });
@@ -46,26 +46,26 @@ function ValidateSignUp() {
                 password_confirm: {
                     required: true,
                     minlength: 8,
-                    equalTo: ".password__input"
+                    equalTo: '.password__input'
                 }
             },
             messages: {
                 email: {
-                    required: "это поле обязательно для заполнения",
-                    email: "email некорректный"
+                    required: 'это поле обязательно для заполнения',
+                    email: 'email некорректный'
                 },
                 username: {
-                    required: "это поле обязательно для заполнения",
-                    minlength: "минимальная длинна логина 3 символа"
+                    required: 'это поле обязательно для заполнения',
+                    minlength: 'минимальная длинна логина 3 символа'
                 },
                 password: {
-                    required: "это поле обязательно для заполнения",
-                    minlength: "минимальная длинна пароля 8 символов"
+                    required: 'это поле обязательно для заполнения',
+                    minlength: 'минимальная длинна пароля 8 символов'
                 },
                 password_confirm: {
-                    required: "это поле обязательно для заполнения",
-                    minlength: "минимальная длинна пароля 8 символов",
-                    equalTo: "пароли не совпадают"
+                    required: 'это поле обязательно для заполнения',
+                    minlength: 'минимальная длинна пароля 8 символов',
+                    equalTo: 'пароли не совпадают'
                 }
             }
         });

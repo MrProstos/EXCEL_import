@@ -16,9 +16,9 @@ class SignIn extends \Core\Controller
      */
     protected function before()
     {
-        $auth = new Auth();
+        $db = new Users();
 
-        if ($auth->isAuth()) {
+        if ($db->isAuth()) {
             header('Location: ?import/');
         }
     }
@@ -29,7 +29,7 @@ class SignIn extends \Core\Controller
      */
     public function indexAction(): void
     {
-        View::renderTemplate('sign_in.html.twig',['title'=>'Вход']);
+        View::renderTemplate('sign_in.twig', ['title' => 'Вход']);
     }
 
 
@@ -37,14 +37,14 @@ class SignIn extends \Core\Controller
      * User Login
      * @return void
      */
-    public function signInAction()
+    public function signInAction(): void
     {
         $email = $_POST['email'];
         $password = $_POST['password'];
         $users = new Users();
 
         if (!$users->checkUser($email, $password)) {
-            echo 'Такого пользователя нету'; // TODO Доделать
+            echo 'Такого пользователя нету';
             return;
         }
         setcookie('hash', md5($email . $password));

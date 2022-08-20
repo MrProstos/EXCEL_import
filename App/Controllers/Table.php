@@ -17,23 +17,21 @@ class Table extends \Core\Controller
      */
     public function indexAction(): void
     {
-        $matches = [];
-        preg_match_all("/\d+/", $_SERVER['REQUEST_URI'], $matches);
-        $activePage = $matches[0][0];
+        $activePage = $this->route_params['page'];
 
         $data = $this->pageAction((int)$activePage);
-        View::renderTemplate('table.html.twig', ['title' => 'Таблица', 'data' => $data, 'activePage' => $activePage]);
+        View::renderTemplate('table.twig', ['title' => 'Таблица', 'data' => $data, 'activePage' => $activePage]);
     }
 
     /**
      * Returns page data
-     * @param int $page
-     * @return bool|array
+     * @param int $page Active page number
+     * @return bool|array Page data
      */
     private function pageAction(int $page): bool|array
     {
         $usersDb = new Price();
-        $dataTable = $usersDb->showTablePrays($page);
+        $dataTable = $usersDb->showTablePrice($page);
 
         if ($dataTable === []) {
             return false;

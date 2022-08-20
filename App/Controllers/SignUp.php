@@ -19,7 +19,7 @@ class SignUp extends \Core\Controller
 
     public function indexAction(): void
     {
-        View::renderTemplate('sign_up.html.twig',['title'=>'Регистрация']);
+        View::renderTemplate('sign_up.twig', ['title' => 'Регистрация']);
     }
 
     /**
@@ -42,8 +42,8 @@ class SignUp extends \Core\Controller
 
     /**
      * Sending a confirmation email
-     * @param string $email
-     * @param string $hash
+     * @param string $email User email
+     * @param string $hash Email and password concatenation
      * @return bool
      */
     private function sendEmailVerification(string $email, string $hash): bool
