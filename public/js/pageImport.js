@@ -50,21 +50,14 @@ function ImportForm() {
 
 }
 
-// // Checking file size
-// function SizeFile() {
-//     const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
-//
-//     $(document).ready(function () {
-//         $(".file__input").change(function () {
-//
-//             if (this.files[0].size > MAX_FILE_SIZE) {
-//                 alert('Файл больше 30 MB!');
-//                 return
-//             }
-//             $(".file-name").text(this.files[0]['name'])
-//         });
-//     });
-// }
+// Checking file size
+function NameFile() {
+    $(document).ready(function () {
+        $(".file__input").change(function () {
+            $(".file-name").text(this.files[0]['name'])
+        });
+    });
+}
 
 // Parsing of column selection by the user
 function ChooseSelect() {
