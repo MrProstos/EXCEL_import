@@ -16,7 +16,6 @@ class SignUp extends \Core\Controller
      * Show the Sign_in page
      * @return void
      */
-
     public function indexAction(): void
     {
         View::renderTemplate('sign_up.twig', ['title' => 'Регистрация']);
@@ -32,8 +31,8 @@ class SignUp extends \Core\Controller
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $users = new Users();
-        $users->registrationUser($username, $email, $password) or die();
+        $dbUsers = new Users();
+        $dbUsers->registrationUser($username, $email, $password) or die();
 
         if ($this->sendEmailVerification($email, md5($email . $password))) {
             echo 'Подтвердите почту';

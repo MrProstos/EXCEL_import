@@ -1,42 +1,39 @@
-{% include 'head.twig' %}
-<body>
-<main>
+{% extends 'base.twig' %}
+{% block body %}
     <div class="sign-up box">
-            <div class="content title">
-                <h1 class="has-text-centered">Регистрация</h1>
-            </div>
-            <form class="sign-up__form block" name="sign_up" method="POST" action="?sign_up/registration">
-                <script>ValidateSignUp()</script>
-                <div class="username item block">
-                    <div class="username">Ваш логин</div>
-                    <label>
-                        <input class="input username__input" type="text" name="username">
-                    </label>
-                </div>
-                <div class="email item block">
-                    <div class="email">Ваш email</div>
-                    <label>
-                        <input class="input email__input" type="email" name="email">
-                    </label>
-                </div>
-                <div class="password item block">
-                    <div>Пароль</div>
-                    <label>
-                        <input class="input password__input" type="password" name="password" data-rule-password="true">
-                    </label>
-                </div>
-                <div class="password_confirm item block">
-                    <div>Подтвердите пароль</div>
-                    <label>
-                        <input class="input password_confirm__input" type="password" name="password_confirm"  data-rule-password="true" data-rule-equalTo=".password__input">
-                    </label>
-                </div>
-                <div class="block">
-                    <input class="send button is-success" type="submit" name="submit_btn" value="Регистрация">
-                </div>
-            </form>
+        <div class="content title">
+            <h1 class="has-text-centered">Регистрация</h1>
         </div>
-</main>
-<footer></footer>
-</body>
-</html>
+        <form class="sign-up__form block" name="sign_up" method="POST" action="?sign_up/registration">
+            <script>ValidateSignUp()</script>
+            <div class="username item block">
+                <div class="username">Ваш логин</div>
+                <label>
+                    <input class="input username__input" type="text" name="username">
+                </label>
+            </div>
+            <div class="email item block">
+                <div class="email">Ваш email</div>
+                <label>
+                    <input class="input email__input" type="email" name="email">
+                </label>
+            </div>
+            <div class="password item block">
+                <div>Пароль</div>
+                <label>
+                    <input class="input password__input" type="password" name="password" data-rule-password="true">
+                </label>
+            </div>
+            <div class="password_confirm item block">
+                <div>Подтвердите пароль</div>
+                <label>
+                    <input class="input password_confirm__input" type="password" name="password_confirm"
+                           data-rule-password="true" data-rule-equalTo=".password__input">
+                </label>
+            </div>
+            <div class="block">
+                <input class="send button is-success" type="submit" name="submit_btn" value="Регистрация">
+            </div>
+        </form>
+    </div>
+{% endblock %}

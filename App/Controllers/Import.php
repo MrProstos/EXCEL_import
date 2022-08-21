@@ -70,8 +70,8 @@ class Import extends \Core\Controller
         header('Content-type:application/json');
 
         if (isset($_POST['data'])) {
-            $db = new Price();
-            $result = $db->insertDataImport($_POST['data']);
+            $dbPrice = new Price();
+            $result = $dbPrice->insertDataImport($_POST['data']);
 
             if ($result === 0) {
                 echo json_encode(['status' => 0]);

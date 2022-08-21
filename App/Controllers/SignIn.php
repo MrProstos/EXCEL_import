@@ -14,11 +14,11 @@ class SignIn extends \Core\Controller
      * Checks if such a user exists
      * @return void
      */
-    protected function before()
+    protected function before(): void
     {
-        $db = new Users();
+        $dbUsers = new Users();
 
-        if ($db->isAuth()) {
+        if ($dbUsers->isAuth()) {
             header('Location: ?import/');
         }
     }
@@ -41,9 +41,9 @@ class SignIn extends \Core\Controller
     {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $users = new Users();
+        $dbUsers = new Users();
 
-        if (!$users->checkUser($email, $password)) {
+        if (!$dbUsers->checkUser($email, $password)) {
             echo 'Такого пользователя нету';
             return;
         }

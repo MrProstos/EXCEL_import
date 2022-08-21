@@ -1,5 +1,5 @@
-{% include 'head.twig' %}
-<body>
+{% extends 'base.twig' %}
+{% block body %}
 <div class="box result-table__box container is-widescreen">
     <table class="table result-table">
         <thead>
@@ -42,5 +42,4 @@
         </ul>
     </nav>
 </div>
-</body>
-</html>
+{% endblock %}

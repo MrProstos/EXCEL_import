@@ -30,8 +30,8 @@ class Table extends \Core\Controller
      */
     private function pageAction(int $page): bool|array
     {
-        $usersDb = new Price();
-        $dataTable = $usersDb->showTablePrice($page);
+        $dbPrice = new Price();
+        $dataTable = $dbPrice->showTablePrice($page);
 
         if ($dataTable === []) {
             return false;
