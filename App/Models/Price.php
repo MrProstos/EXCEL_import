@@ -20,6 +20,12 @@ class Price extends \Core\Model
         $db->exec('TRUNCATE TABLE price');
         $nRow = 0;
 
+        foreach ($data as $item) {
+            if (!isset($item['value'])) {
+                return 0;
+            }
+        }
+
         for ($i = 0; $i < count($data['sku']['value']); $i++) {
             try {
                 $sku = $data['sku']['value'][$i] ?? null;

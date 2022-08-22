@@ -25,7 +25,7 @@
         </tbody>
     </table>
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <a class="pagination-next" href="?table/page{{ data['nAllRow'][0]}}">В конец</a>
+        <a class="pagination-next" href="?table/page{{ data['nAllRow']}}">В конец</a>
         <a class="pagination-previous" href="?table/page0">В начало</a>
         <ul class="pagination-list">
             {% for i in 0..data['nAllRow'] %}
