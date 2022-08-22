@@ -46,8 +46,6 @@ function ImportForm() {
             $('.import__table-container').show()
         },
     })
-
-
 }
 
 // Checking file size
