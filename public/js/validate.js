@@ -2,7 +2,7 @@
 
 function ValidateSignIn() {
     $(document).ready(function () {
-        $(".sign-in__form").validate({
+        $('.sign-in__form').validate({
             rules: {
                 email: {
                     required: true,
@@ -29,7 +29,7 @@ function ValidateSignIn() {
 
 function ValidateSignUp() {
     $(document).ready(function () {
-        $(".sign-up__form").validate({
+        $('.sign-up__form').validate({
             rules: {
                 email: {
                     required: true,
