@@ -6,7 +6,7 @@ function ImportForm() {
     $('.new-tbody-result-import__row').remove()
 
     let formData = new FormData();
-    formData.append("file", $("input[type=file]")[0].files[0]);
+    formData.append('file', $('input[type=file]')[0].files[0]);
     $('.import__button').attr('class', 'button block import__button is-primary is-loading  ml-4')
 
     $.ajax({
@@ -17,7 +17,7 @@ function ImportForm() {
         contentType: false,
         success: function (data) {
             let result = JSON.parse(data);
-            let button = $(".import__button")
+            let button = $('.import__button')
 
             if (result === 2) {
                 button.attr('class', 'button block import__button  ml-4')
@@ -31,14 +31,14 @@ function ImportForm() {
             }
 
             for (let i = 0; i < result[0].length; i++) {
-                $(".thead-result__cell__hide").clone().attr('class', 'thead-result__cell new-thead-result__cell').appendTo('.thead__row')
+                $('.thead-result__cell__hide').clone().attr('class', 'thead-result__cell new-thead-result__cell').appendTo('.thead__row')
             }
 
             for (let i = 0; i < result.length; i++) {
                 $(".tbody-result-import__row__hide").clone().attr('class', `tbody-result-import__row-${i} new-tbody-result-import__row`).appendTo('.tbody-result-import')
 
                 for (let j = 0; j < result[0].length; j++) {
-                    $(".tbody-result-import__cell__hide").clone().attr('class', 'tbody-result-import__cell').text(result[i][j]).appendTo(`.tbody-result-import__row-${i}`)
+                    $('.tbody-result-import__cell__hide').clone().attr('class', 'tbody-result-import__cell').text(result[i][j]).appendTo(`.tbody-result-import__row-${i}`)
                 }
             }
             $(".finish-processing__button").show()
