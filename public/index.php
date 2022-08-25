@@ -28,7 +28,7 @@ if ($db->isAuth()) {
     $router->add('/api/token/{hash:[a-zA-z0-9]+}',['controller' => 'Api', 'action' => 'getToken']);
 }
 
-$router->add('/api/v1/',['controller' => 'Api', 'action' => 'chooseMethod']);
+$router->add('/api/clients/',['controller' => 'Api', 'action' => 'chooseMethod']);
 
 $router->add('/', ['controller' => 'SignIn', 'action' => 'index']);
 $router->add('/sign_in/', ['controller' => 'SignIn', 'action' => 'signIn']);

@@ -12,24 +12,25 @@ function getToken() {
 
 function Add() {
     $.ajax({
-        url: '/api/v1/',
+        url: '/api/clients/',
         method: 'POST',
         headers: {'Authorization': '63070b4c04a604.64646160'},
         dataType: 'json',
         data: {
-            'method': 'add',
-            'params': {
+            'method': 'get',
+            'params': [{
                 'sku': '000006890',
-                'product_name': 'Кран-балка 007',
-                'supplier': 'GTK.',
-                'price': '122',
-                'cnt': '12245.88'
-            }},
+            }, {
+                'sku': '000007777',
+            }, {
+                'sku': '000006666',
+            }]
+        },
         success: function (data) {
             console.log(data)
         },
-        error: function (jqXHD, error) {
-            console.log(jqXHD, error)
-        }
+        error: function (jqXHD) {
+            console.log(jqXHD)
+        },
     })
 }

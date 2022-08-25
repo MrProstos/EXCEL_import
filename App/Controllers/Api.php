@@ -6,19 +6,30 @@ use Core\View;
 
 class Api extends \Core\Controller
 {
-
-    private const OBJECT_NOT_FOUND = 100;
-    private const SCHEMA_ERROR_DATA = 101;
-    private const FAILED_TO_ADD_AN_OBJECT = 102;
-    private const THE_OBJECT_COULD_NOT_BE_DELETED = 103;
-    private const FAILED_TO_UPDATE_THE_OBJECT = 104;
-    private const NOT_AUTHORIZED = 105;
-    private const UNKNOWN_METHOD = 106;
-    private const UNKNOWN_ERROR = 199;
+    private const UNAUTHORIZED = 401;
+    private const UNKNOWN_METHOD = 405;
+    private const OBJECT_NOT_FOUND = 406;
+    private const SCHEMA_ERROR_DATA = 407;
+    private const FAILED_TO_ADD_AN_OBJECT = 408;
+    private const THE_OBJECT_COULD_NOT_BE_DELETED = 409;
+    private const FAILED_TO_UPDATE_THE_OBJECT = 410;
+    private const UNKNOWN_ERROR = 499;
 
     public function indexAction()
     {
         View::renderTemplate('api.twig', ['title' => 'API']);
+    }
+
+    /**
+     * Send an error message
+     * @param int $errorCode error code
+     * @param string $errorString error message
+     * @return void
+     */
+    private function sendError(int $errorCode, string $errorString): void
+    {
+        http_response_code($errorCode);
+        echo json_encode(['error_code' => $errorCode, 'errorString' => $errorString]);
     }
 
     /**
@@ -38,41 +49,129 @@ class Api extends \Core\Controller
      */
     public function chooseMethodAction(): void
     {
-        $headers = getallheaders();
-        $api = new \App\Models\Api();
-
-        if (!$api->tokenVerification($headers['Authorization'])) {
-            echo self::NOT_AUTHORIZED;
-            return;
-        }
-
-        $method = $_POST['method'];
         try {
-            $this->$method($_POST['params']);
-        } catch (\Exception) {
-            echo self::UNKNOWN_METHOD;
+            $headers = getallheaders();
+            $token = $headers['Authorization'];
+
+            $api = new \App\Models\Api();
+            if (!$api->tokenVerification($token)) {
+                throw new \Exception('Invalid token', self::UNAUTHORIZED);
+            }
+
+            $method = $_POST['method'];
+            if (!method_exists($this, $method)) {
+                throw new \Exception('There is no such method', self::UNKNOWN_METHOD);
+            }
+
+            $this->$method($_POST['params'], $token);
+        } catch (\Exception $e) {
+            $this->sendError($e->getCode(), $e->getMessage());
             return;
         }
     }
 
-    private function add(array $data)
+    /**
+     * Get data
+     * @param array $data array of data from the post request
+     * @param string $token user token
+     * @return void
+     */
+    private function get(array $data, string $token): void
     {
-        echo json_encode($data);
+        try {
+            foreach ($data as $item) {
+                switch (true) {
+                    case !array_key_exists('sku', $item):
+                    case array_search('sku', $item) === '':
+                        throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+                }
+            }
+
+            $api = new \App\Models\Api();
+
+            $result = $api->get($data, $token);
+            if ($result === []) {
+                throw new \Exception('Failed to get data', self::FAILED_TO_ADD_AN_OBJECT,);
+            }
+
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            $this->sendError($e->getCode(), $e->getMessage());
+        }
     }
 
-    private function update(array $data)
+    /**
+     * Adding data
+     * @param array $data array of data from the post request
+     * @param string $token user token
+     * @return void
+     */
+    private function add(array $data, string $token): void
     {
-        echo json_encode($data);
+        try {
+            foreach ($data as $item) {
+                switch (true) {
+                    case !array_key_exists('sku', $item):
+                    case !array_key_exists('product_name', $item):
+                    case !array_key_exists('supplier', $item):
+                    case !array_key_exists('price', $item):
+                    case !array_key_exists('cnt', $item):
+
+                    case array_search('sku', $item) === '':
+                    case array_search('product_name', $item) === '':
+                    case array_search('supplier', $item) === '':
+                    case array_search('price', $item) === '':
+                    case array_search('cnt', $item) === '':
+                        throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+                }
+            }
+
+            $api = new \App\Models\Api();
+
+            $result = $api->add($data, $token);
+            if ($result === []) {
+                throw new \Exception('Failed to add data', self::FAILED_TO_ADD_AN_OBJECT,);
+            }
+
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            $this->sendError($e->getCode(), $e->getMessage());
+        }
     }
 
-    private function delete(array $data)
+    /**
+     * Updating data
+     * @param array $data array of data from the post request
+     * @param string $token user token
+     * @return void
+     */
+    private function update(array $data, string $token): void
     {
-        echo json_encode($data);
+        try {
+            foreach ($data as $item) {
+                switch (true) {
+                    case !array_key_exists('sku', $item):
+                    case array_search('sku', $item) === '':
+                        throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+                }
+            }
+
+            $api = new \App\Models\Api();
+            $resul = $api->update($data, $token);
+
+            if ($resul === []) {
+                throw new \Exception('Failed to update data', self::FAILED_TO_UPDATE_THE_OBJECT);
+            }
+            echo json_encode($resul);
+
+        } catch (\Exception $e) {
+            $this->sendError($e->getCode(), $e->getMessage());
+        }
     }
 
-    private function get(array $data)
+    private function delete(array $data, string $token)
     {
-        echo json_encode($data);
+        echo json_encode($data); //TODO сделать
     }
 
 
