@@ -19,7 +19,7 @@ class SignIn extends \Core\Controller
         $dbUsers = new Users();
 
         if ($dbUsers->isAuth()) {
-            header('Location: ?import/');
+            header('Location: /import/');
         }
     }
 
@@ -47,7 +47,7 @@ class SignIn extends \Core\Controller
             echo 'Такого пользователя нету';
             return;
         }
-        setcookie('hash', md5($email . $password));
-        header('Location: ?import/');
+        setcookie('hash', md5($email . $password),0,'/');
+        header('Location: /import/');
     }
 }

@@ -18,9 +18,9 @@ class Users extends \Core\Model
     public function registrationUser(string $username, string $email, string $passwd): bool
     {
         try {
-            $db = static::getDB();
+            $db =$this->getDB();
 
-            $result = $db->prepare("INSERT INTO reg_user (username, email, passwd, confirm_email) VALUES (?, ?, MD5(CONCAT(?, ?)), 'no')");
+            $result = $db->prepare("INSERT INTO mydb.reg_user (username, email, passwd, confirm_email) VALUES (?, ?, MD5(CONCAT(?, ?)), 'no')");
             $result->execute([$username, $email, $email, $passwd]);
 
             return true;
@@ -37,9 +37,9 @@ class Users extends \Core\Model
      */
     public function isUser(string $hash): bool
     {
-        $db = static::getDB();
+        $db = $this->getDB();
 
-        $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = ?");
+        $result = $db->prepare("SELECT * FROM mydb.reg_user WHERE passwd = ?");
         $result->execute([$hash]);
 
         if ($result->rowCount() != 1) {
@@ -59,9 +59,9 @@ class Users extends \Core\Model
     public function checkUser(string $email, string $passwd): bool
     {
         try {
-            $db = static::getDB();
+            $db = $this->getDB();
 
-            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = MD5(CONCAT(?,?)) AND confirm_email = 'yes'");
+            $result = $db->prepare("SELECT * FROM mydb.reg_user WHERE passwd = MD5(CONCAT(?,?)) AND confirm_email = 'yes'");
             $result->execute([$email, $passwd]);
 
             if ($result->rowCount() != 1) {
@@ -82,9 +82,9 @@ class Users extends \Core\Model
     public function confirmMail(string $hash): bool
     {
         try {
-            $db = static::getDB();
+            $db = $this->getDB();
 
-            $result = $db->prepare("UPDATE reg_user SET confirm_email = 'yes' WHERE passwd = ?");
+            $result = $db->prepare("UPDATE mydb.reg_user SET confirm_email = 'yes' WHERE passwd = ?");
             $result->execute([$hash]);
 
             if ($result->rowCount() != 1) {

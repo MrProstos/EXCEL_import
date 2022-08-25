@@ -1,45 +1,48 @@
 {% extends 'base.twig' %}
-{% block body %}
-<div class="box result-table__box container is-widescreen">
-    <table class="table result-table">
-        <thead>
-        <tr>
-            <th>Артикул</th>
-            <th>Название товара</th>
-            <th>Поставщик</th>
-            <th>Цена</th>
-            <th>Кол-во</th>
-        </tr>
-        </thead>
-        <tbody class="result-database-table">
-        {% for row in data['data'] %}
+{% block content %}
+    <div class="box import width">
+        {% include 'navbar.twig' %}
+        <table class="table result-table">
+            <thead>
             <tr>
-
-                {% for cell in row %}
-                    <td>{{ cell }}</td>
-                {% endfor %}
+                <th>Артикул</th>
+                <th>Название товара</th>
+                <th>Поставщик</th>
+                <th>Цена</th>
+                <th>Кол-во</th>
             </tr>
-        {% endfor %}
-        <tr class="tbody-result-import__row__hide"></tr>
-        <td class="tbody-result-import__cell__hide"></td>
-        </tbody>
-    </table>
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <a class="pagination-next" href="?table/page{{ data['nAllRow']}}">В конец</a>
-        <a class="pagination-previous" href="?table/page0">В начало</a>
-        <ul class="pagination-list">
-            {% for i in 0..data['nAllRow'] %}
+            </thead>
+            <tbody class="result-database-table">
+            {% for row in data['data'] %}
+                <tr>
 
-                {% if i < activePage + 3 and i > activePage - 3 %}
-
-                    {% if i == activePage %}
-                        <li><a class="pagination-link is-current" href="?table/page{{ i }}">{{ i + 1 }}</a></li>
-                    {% else %}
-                        <li><a class="pagination-link" href="?table/page{{ i }}">{{ i + 1 }}</a></li>
-                    {% endif %}
-                {% endif %}
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </ul>
-    </nav>
-</div>
+            <tr class="tbody-result-import__row__hide is-hidden"></tr>
+            <td class="tbody-result-import__cell__hide is-hidden"></td>
+            </tbody>
+        </table>
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+            {% if data['nAllRow'] > 0 %}
+                <a class="pagination-next" href="/table/{{ data['nAllRow'] }}">В конец</a>
+                <a class="pagination-previous" href="/table/0">В начало</a>
+                <ul class="pagination-list">
+                    {% for i in 0..data['nAllRow'] %}
+
+                        {% if i < activePage + 3 and i > activePage - 3 %}
+
+                            {% if i == activePage %}
+                                <li><a class="pagination-link is-current" href="/table/{{ i }}">{{ i + 1 }}</a></li>
+                            {% else %}
+                                <li><a class="pagination-link" href="/table/{{ i }}">{{ i + 1 }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </nav>
+    </div>
 {% endblock %}

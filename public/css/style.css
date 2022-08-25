@@ -1,15 +1,16 @@
-
 .sign-in, .sign-up {
-    margin: 10% auto 0;
+    margin: 5% auto 0;
     width: 500px;
 }
 
-.import-table__box, .result-table__box {
-    margin: 5% auto 0;
+.import,
+.result-table,
+.api{
+    margin: 0 auto 0;
     width: 1300px;
 }
 
-.import-table, .result-table {
+.table {
     width: 100%;
 }
 
@@ -30,8 +31,11 @@ html {
     overflow: scroll; /* свойство для прокрутки по горизонтали. Автоматом, если содержимое больше блока */
 }
 
-.thead-result__cell__hide, .tbody-result-import__row__hide, .tbody-result-import__cell__hide, .finish-processing__button, .import__table-container {
+.hidden {
     display: none;
 }
 
 /*-------------------------------------------*/
+.border {
+    border-radius: 5px;
+}

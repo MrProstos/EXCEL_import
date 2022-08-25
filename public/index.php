@@ -15,20 +15,26 @@ set_exception_handler('Core\Error::exceptionHandler');
  */
 $router = new Core\Router();
 $db = new App\Models\Users();
+$api = new App\Models\Api();
 
 if ($db->isAuth()) {
-    $router->add('import/', ['controller' => 'Import', 'action' => 'index']);
-    $router->add('import/import', ['controller' => 'Import', 'action' => 'parseUploadFile']);
-    $router->add('import/insertTable', ['controller' => 'Import', 'action' => 'insertTable']);
+    $router->add('/import/', ['controller' => 'Import', 'action' => 'index']);
+    $router->add('/import/import/', ['controller' => 'Import', 'action' => 'parseUploadFile']);
+    $router->add('/import/insertTable/', ['controller' => 'Import', 'action' => 'insertTable']);
 
-    $router->add('table/page{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
+    $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
+
+    $router->add('/api/',['controller' => 'Api', 'action' => 'index']);
+    $router->add('/api/token/{hash:[a-zA-z0-9]+}',['controller' => 'Api', 'action' => 'getToken']);
 }
 
-$router->add("", ["controller" => "SignIn", "action" => "index"]);
-$router->add("sign_in/", ["controller" => "SignIn", "action" => "signIn"]);
+$router->add('/api/v1/',['controller' => 'Api', 'action' => 'chooseMethod']);
 
-$router->add("sign_up/", ["controller" => "SignUp", "action" => "index"]);
-$router->add("sign_up/registration", ["controller" => "SignUp", "action" => "registration"]);
-$router->add("sign_up/emailVerification", ["controller" => "SignUp", "action" => "emailVerification"]);
+$router->add('/', ['controller' => 'SignIn', 'action' => 'index']);
+$router->add('/sign_in/', ['controller' => 'SignIn', 'action' => 'signIn']);
 
-$router->dispatch($_SERVER['QUERY_STRING']);
+$router->add('/sign_up/', ['controller' => 'SignUp', 'action' => 'index']);
+$router->add('/sign_up/registration/', ['controller' => 'SignUp', 'action' => 'registration']);
+$router->add('/sign_up/emailVerification/', ['controller' => 'SignUp', 'action' => 'emailVerification']);
+
+$router->dispatch($_SERVER['REQUEST_URI']);

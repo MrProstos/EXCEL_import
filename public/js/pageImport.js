@@ -10,7 +10,7 @@ function ImportForm() {
     $('.import__button').attr('class', 'button block import__button is-primary is-loading  ml-4')
 
     $.ajax({
-        url: '?import/import',
+        url: '/import/import/',
         type: 'POST',
         data: formData,
         processData: false,
@@ -92,7 +92,7 @@ function ChooseSelect() {
     }
 
     console.log(dataArr)
-    $.post('?import/insertTable', dataArr, function (msg, status) {
+    $.post('/import/insertTable/', dataArr, function (msg, status) {
             if (status === 'success') {
                 $('.finish-processing__button').attr('class', 'finish-processing__button button finish-processing__button box')
 

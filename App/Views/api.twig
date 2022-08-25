@@ -1,0 +1,13 @@
+{% extends 'base.twig' %}
+{% block content %}
+    <div class="api box block">
+        {% include 'navbar.twig' %}
+        <div class="api-get level">
+            <input class="button api-get__button level-left" type="button" value="Получить токен" onclick="getToken()">
+            <span class="token level-item"></span>
+        </div>
+        <div class="method-add block">
+            <button class="method-add__button button" onclick="Add()">Отправить add запрос</button>
+        </div>
+    </div>
+{% endblock %}

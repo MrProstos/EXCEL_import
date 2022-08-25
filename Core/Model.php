@@ -13,23 +13,23 @@ use App\Config;
 abstract class Model
 {
 
+    static PDO $db;
+
     /**
      * Get the PDO database connection
      *
-     * @return mixed
+     * @return PDO
      */
-    protected static function getDB()
+    protected function getDB(): PDO
     {
-        static $db = null;
-
-        if ($db === null) {
+        if (!isset(self::$db)) {
             $dsn = 'mysql:host=' . Config::DB_HOST . ';dbname=' . Config::DB_NAME . ';charset=utf8';
-            $db = new PDO($dsn, Config::DB_USER, Config::DB_PASSWORD);
+            self::$db = new PDO($dsn, Config::DB_USER, Config::DB_PASSWORD);
 
             // Throw an Exception when an error occurs
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
 
-        return $db;
+        return self::$db;
     }
 }

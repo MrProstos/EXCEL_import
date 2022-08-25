@@ -53,7 +53,7 @@ class SignUp extends \Core\Controller
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = 'Подтверждение почты';
-            $mail->Body = "<form action='http://mrprostos.keenetic.link/?sign_up/emailVerification' method='POST'>
+            $mail->Body = "<form action='https://apachehttps.mrprostos.keenetic.link/sign_up/emailVerification/' method='POST'>
                            <input type='hidden' name='hash' value='$hash'>
                            <button type='submit'>Нажмите для подтверждения почты</button>
                            </form>";
