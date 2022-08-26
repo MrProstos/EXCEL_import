@@ -106,6 +106,8 @@ function Get() {
                 'sku': '000007777',
             }, {
                 'sku': '000006666',
+            },{
+                'sku': 'WWW',
             }]
         },
         success: function (data) {

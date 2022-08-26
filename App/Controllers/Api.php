@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Core\View;
+use Exception;
 
 class Api extends \Core\Controller
 {
@@ -55,16 +56,16 @@ class Api extends \Core\Controller
 
             $api = new \App\Models\Api();
             if (!$api->tokenVerification($token)) {
-                throw new \Exception('Invalid token', self::UNAUTHORIZED);
+                throw new Exception('Invalid token', self::UNAUTHORIZED);
             }
 
             $method = $_POST['method'];
             if (!method_exists($this, $method)) {
-                throw new \Exception('There is no such method', self::UNKNOWN_METHOD);
+                throw new Exception('There is no such method', self::UNKNOWN_METHOD);
             }
 
             $this->$method($_POST['params'], $token);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->sendError($e->getCode(), $e->getMessage());
             return;
         }
@@ -75,29 +76,22 @@ class Api extends \Core\Controller
      * @param array $data array of data from the post request
      * @param string $token user token
      * @return void
+     * @throws Exception
      */
     private function get(array $data, string $token): void
     {
-        try {
-            foreach ($data as $item) {
-                switch (true) {
-                    case !array_key_exists('sku', $item):
-                    case array_search('sku', $item) === '':
-                        throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-                }
-            }
-
-            $api = new \App\Models\Api();
-
-            $result = $api->get($data, $token);
-            if ($result === []) {
-                throw new \Exception('Failed to get data', self::FAILED_TO_ADD_AN_OBJECT,);
-            }
-
-            echo json_encode($result);
-        } catch (\Exception $e) {
-            $this->sendError($e->getCode(), $e->getMessage());
+        if (!$this->isCorrectData(__FUNCTION__, $data)) {
+            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
         }
+
+        $api = new \App\Models\Api();
+
+        $result = $api->get($data, $token);
+        if ($result === []) {
+            throw new Exception('Failed to get data', self::FAILED_TO_ADD_AN_OBJECT,);
+        }
+
+        echo json_encode($result);
     }
 
     /**
@@ -105,38 +99,22 @@ class Api extends \Core\Controller
      * @param array $data array of data from the post request
      * @param string $token user token
      * @return void
+     * @throws Exception
      */
     private function add(array $data, string $token): void
     {
-        try {
-            foreach ($data as $item) {
-                switch (true) {
-                    case !array_key_exists('sku', $item):
-                    case !array_key_exists('product_name', $item):
-                    case !array_key_exists('supplier', $item):
-                    case !array_key_exists('price', $item):
-                    case !array_key_exists('cnt', $item):
-
-                    case array_search('sku', $item) === '':
-                    case array_search('product_name', $item) === '':
-                    case array_search('supplier', $item) === '':
-                    case array_search('price', $item) === '':
-                    case array_search('cnt', $item) === '':
-                        throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-                }
-            }
-
-            $api = new \App\Models\Api();
-
-            $result = $api->add($data, $token);
-            if ($result === []) {
-                throw new \Exception('Failed to add data', self::FAILED_TO_ADD_AN_OBJECT,);
-            }
-
-            echo json_encode($result);
-        } catch (\Exception $e) {
-            $this->sendError($e->getCode(), $e->getMessage());
+        if (!$this->isCorrectData(__FUNCTION__, $data)) {
+            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
         }
+
+        $api = new \App\Models\Api();
+
+        $result = $api->add($data, $token);
+        if ($result === []) {
+            throw new Exception('Failed to add data', self::FAILED_TO_ADD_AN_OBJECT,);
+        }
+
+        echo json_encode($result);
     }
 
     /**
@@ -144,43 +122,45 @@ class Api extends \Core\Controller
      * @param array $data array of data from the post request
      * @param string $token user token
      * @return void
+     * @throws Exception
      */
     private function update(array $data, string $token): void
     {
-        try {
-            foreach ($data as $item) {
-                switch (true) {
-                    case !array_key_exists('sku', $item):
-                    case !array_key_exists('product_name', $item):
-                    case !array_key_exists('supplier', $item):
-                    case !array_key_exists('price', $item):
-                    case !array_key_exists('cnt', $item):
-
-                    case array_search('sku', $item) === '':
-                    case array_search('product_name', $item) === '':
-                    case array_search('supplier', $item) === '':
-                    case array_search('price', $item) === '':
-                    case array_search('cnt', $item) === '':
-                        throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-                }
-            }
-
-            $api = new \App\Models\Api();
-            $resul = $api->update($data, $token);
-
-            if ($resul === []) {
-                throw new \Exception('Failed to update data', self::FAILED_TO_UPDATE_THE_OBJECT);
-            }
-            echo json_encode($resul);
-
-        } catch (\Exception $e) {
-            $this->sendError($e->getCode(), $e->getMessage());
+        if (!$this->isCorrectData(__FUNCTION__, $data)) {
+            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
         }
+
+        $api = new \App\Models\Api();
+        $resul = $api->update($data, $token);
+
+        if ($resul === []) {
+            throw new Exception('Failed to update data', self::FAILED_TO_UPDATE_THE_OBJECT);
+        }
+
+        echo json_encode($resul);
     }
 
-    private function delete(array $data, string $token)
+    /**
+     * Delete data
+     * @param array $data
+     * @param string $token
+     * @return void
+     * @throws Exception
+     */
+    private function delete(array $data, string $token): void
     {
+        if (!$this->isCorrectData(__FUNCTION__, $data)) {
+            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+        }
 
+        $api = new \App\Models\Api();
+        $resul = $api->delete($data, $token);
+
+        if ($resul === []) {
+            throw new Exception('Failed to delete data', self::FAILED_TO_UPDATE_THE_OBJECT);
+        }
+
+        echo json_encode($data);
     }
 
     /**
@@ -224,6 +204,4 @@ class Api extends \Core\Controller
         }
         return true;
     }
-
-
 }
