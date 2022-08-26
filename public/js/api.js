@@ -126,7 +126,7 @@ function Delete() {
         headers: {'Authorization': TOKEN},
         dataType: 'json',
         data: {
-            'method': 'delete',
+            // 'method': 'delete',
             'params': [{
                 'sku': '000006890',
             }, {

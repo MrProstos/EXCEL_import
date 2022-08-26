@@ -52,6 +52,10 @@ class Api extends \Core\Controller
     public function chooseMethodAction(): void
     {
         try {
+            if (!isset($_POST['method']) || !isset($_POST['params'])) {
+                throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+            }
+
             $headers = getallheaders();
             $token = $headers['Authorization'];
 
@@ -61,133 +65,25 @@ class Api extends \Core\Controller
             }
 
             $method = $_POST['method'];
-            if (!method_exists($this, $method)) {
+            $data = $_POST['params'];
+            if (!method_exists($api, $method)) {
                 throw new Exception('There is no such method', self::UNKNOWN_METHOD);
             }
 
-            $this->$method($_POST['params'], $token);
+            if (!$this->isCorrectData($method, $data)) {
+                throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+            }
+
+            $result = $api->$method($data, $token);
+            if ($result === []) {
+                throw new Exception('Unknown error', self::UNKNOWN_ERROR);
+            }
+
+            echo json_encode($result);
         } catch (Exception $e) {
             $this->sendError($e->getCode(), $e->getMessage());
             return;
         }
-    }
-
-    /**
-     * Get data
-     * @param array $data array of data from the post request
-     * @param string $token user token
-     * @return void
-     * @throws Exception
-     */
-    private function get(array $data, string $token): void
-    {
-        if (!$this->isCorrectData(__FUNCTION__, $data)) {
-            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-        }
-
-        $api = new \App\Models\Api();
-
-        $result = $api->get($data, $token);
-        if ($result === []) {
-            throw new Exception('Failed to get data', self::OBJECT_NOT_FOUND,);
-        }
-
-        echo json_encode($result);
-    }
-
-    /**
-     * Adding data
-     * @param array $data array of data from the post request
-     * @param string $token user token
-     * @return void
-     * @throws Exception
-     */
-    private function add(array $data, string $token): void
-    {
-        if (!$this->isCorrectData(__FUNCTION__, $data)) {
-            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-        }
-
-        $api = new \App\Models\Api();
-
-        $result = $api->add($data, $token);
-        if ($result === []) {
-            throw new Exception('Failed to add data', self::FAILED_TO_ADD_AN_OBJECT,);
-        }
-
-        echo json_encode($result);
-    }
-
-    /**
-     * Updating data
-     * @param array $data array of data from the post request
-     * @param string $token user token
-     * @return void
-     * @throws Exception
-     */
-    private function update(array $data, string $token): void
-    {
-        if (!$this->isCorrectData(__FUNCTION__, $data)) {
-            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-        }
-
-        $api = new \App\Models\Api();
-        $resul = $api->update($data, $token);
-
-        if ($resul === []) {
-            throw new Exception('Failed to update data', self::FAILED_TO_UPDATE_THE_OBJECT);
-        }
-
-        echo json_encode($resul);
-    }
-
-    /**
-     * Delete data
-     * @param array $data
-     * @param string $token
-     * @return void
-     * @throws Exception
-     */
-    private function delete(array $data, string $token): void
-    {
-        if (!$this->isCorrectData(__FUNCTION__, $data)) {
-            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-        }
-
-        $api = new \App\Models\Api();
-        $resul = $api->delete($data, $token);
-
-        if ($resul === []) {
-            throw new Exception('Failed to delete data', self::THE_OBJECT_COULD_NOT_BE_DELETED);
-        }
-
-        echo json_encode($data);
-    }
-
-    /**
-     * @param array $data
-     * @param string $token
-     * @return void
-     * @throws Exception
-     */
-    private function replace(array $data, string $token): void
-    {
-        if (!$this->isCorrectData(__FUNCTION__, $data)) {
-            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-        }
-
-        /* TODO что если динамически вызывать методы генерируя какой метод вызвать внутри.
-        Создать один каркас и там вызвать
-        Например  $resul = $api->$Переменная_с_название_метода($data, $token);*/
-
-        $api = new \App\Models\Api();
-        $resul = $api->replace($data, $token);
-
-        if ($resul === []) {
-            throw new Exception('Failed to replace data', self::THE_OBJECT_COULD_NOT_BE_REPLACED);
-        }
-
-        echo json_encode($data);
     }
 
     /**
