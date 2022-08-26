@@ -19,7 +19,7 @@ class Table extends \Core\Controller
     {
         $activePage = $this->route_params['page'];
 
-        $data = $this->pageAction((int)$activePage);
+        $data = $this->pageAction($activePage);
         View::renderTemplate('table.twig', ['title' => 'Таблица', 'data' => $data, 'activePage' => $activePage]);
     }
 

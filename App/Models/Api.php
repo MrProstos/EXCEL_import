@@ -57,23 +57,7 @@ class Api extends \Core\Model
      */
     public function get(array $data, string $token): array
     {
-        try {
-            $db = $this->getDB();
-            $result = $db->prepare('SELECT sku, product_name, supplier, price, cnt FROM price
-                                            INNER JOIN reg_user on price.user_id = (SELECT id FROM reg_user WHERE api_token = :token)
-                                            WHERE sku = :sku');
-
-            foreach ($data as &$item) {
-                $result->execute([':token' => $token, ':sku' => $item['sku']]);
-                foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                    $item = $row;
-                }
-            }
-
-            return $data;
-        } catch (\PDOException) {
-            return [];
-        }
+        return $this->selectRequest($data, $token);
     }
 
     /**
@@ -84,32 +68,10 @@ class Api extends \Core\Model
      */
     public function add(array $data, string $token): array
     {
-        try {
-            $db = $this->getDB();
-            $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt) 
-                                            SELECT (SELECT reg_user.id
-                                                FROM reg_user
-                                                WHERE reg_user.api_token = :token),
-                                               :sku,
-                                               :product_name,
-                                               :supplier,
-                                               :price,
-                                               :cnt');
-
-            foreach ($data as $item) {
-                $result->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku'],
-                    ':product_name' => $item['product_name'],
-                    ':supplier' => $item['supplier'],
-                    ':price' => $item['price'],
-                    ':cnt' => $item['cnt']
-                ]);
-            }
-            return $data;
-        } catch (\PDOException) {
+        if (!$this->insertRequest($data, $token)) {
             return [];
         }
+        return $data;
     }
 
     /**
@@ -123,7 +85,7 @@ class Api extends \Core\Model
         try {
             $db = $this->getDB();
             // Record search sku
-            $rowExists = $db->prepare('SELECT sku
+            $rowExists = $db->prepare('SELECT *
                                                 FROM price
                                                          INNER JOIN reg_user ru on price.user_id = ru.id
                                                 WHERE price.user_id = (SELECT id FROM reg_user WHERE api_token = :token)
@@ -154,24 +116,7 @@ class Api extends \Core\Model
 
                     $response[] = ['sku' => $item['sku']];
                 } else {
-                    $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
-                                                    SELECT (SELECT reg_user.id 
-                                                            FROM reg_user 
-                                                            WHERE api_token = :token), 
-                                                            :sku, 
-                                                            :product_name, 
-                                                            :supplier, 
-                                                            :price, 
-                                                            :cnt');
-
-                    $result->execute([
-                        ':token' => $token,
-                        ':sku' => $item['sku'],
-                        ':product_name' => $item['product_name'],
-                        ':supplier' => $item['supplier'],
-                        ':price' => $item['price'],
-                        ':cnt' => $item['cnt']
-                    ]);
+                    $this->insertRequest($data, $token);
 
                     $response[] = [
                         ':sku' => $item['sku'],
@@ -196,69 +141,81 @@ class Api extends \Core\Model
      */
     public function delete(array $data, string $token): array
     {
-        try {
-            $db = $this->getDB();
-            $result = $db->prepare('DELETE price
-                                            FROM price
-                                                     INNER JOIN reg_user on price.user_id = reg_user.id
-                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)
-                                              AND price.sku = :sku');
-
-            foreach ($data as $item) {
-                $result->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku']
-                ]);
-            }
-            return $data;
-        } catch (\PDOException) {
+        if (!$this->deleteRequest($data, $token)) {
             return [];
         }
+        return $data;
     }
 
-    public function replace(array $data, string $token)
+    /**
+     * Remove old values and add new ones
+     * @param array $data API params
+     * @param string $token Authorization token
+     * @return array
+     */
+    public function replace(array $data, string $token): array
     {
         try {
             $db = $this->getDB();
             $result = $db->prepare('DELETE price
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id
-                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)
-                                              AND price.sku = :sku');
+                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)');
+            $result->execute([':token' => $token]);
 
-            foreach ($data as $item) {
-                $result->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku']
-                ]);
-
-                $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
-                                                    SELECT (SELECT reg_user.id 
-                                                            FROM reg_user 
-                                                            WHERE api_token = :token), 
-                                                            :sku, 
-                                                            :product_name, 
-                                                            :supplier, 
-                                                            :price, 
-                                                            :cnt');
-
-                $result->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku'],
-                    ':product_name' => $item['product_name'],
-                    ':supplier' => $item['supplier'],
-                    ':price' => $item['price'],
-                    ':cnt' => $item['cnt']
-                ]);
+            if (!$this->insertRequest($data, $token)) {
+                return [];
             }
+
+            return $data;
         } catch (\PDOException) {
             return [];
         }
     }
 
     /**
-     * @param array $data
-     * @param string $token
+     * Request to get a rows
+     * @param array $data API params
+     * @param string $token Authorization token
+     * @return array
+     */
+    public function selectRequest(array $data, string $token): array
+    {
+        try {
+            $db = $this->getDB();
+            $rowExists = $db->prepare('SELECT sku, product_name, supplier, price, cnt
+                                                FROM price
+                                                         INNER JOIN reg_user ru on price.user_id = ru.id
+                                                WHERE price.user_id = (SELECT id FROM reg_user WHERE api_token = :token)
+                                                  AND sku = :sku ');
+
+            $newData = [];
+
+            foreach ($data as $item) {
+                $rowExists->execute([
+                    ':token' => $token,
+                    ':sku' => $item['sku']
+                ]);
+
+                if ($rowExists->rowCount() != 0) {
+                    foreach ($rowExists->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                        $newData[] = $row;
+                    }
+                } else {
+                    $newData[] = ['sku' => $item['sku']];
+                }
+            }
+            return $newData;
+        } catch (\PDOException) {
+            return [];
+        }
+    }
+
+
+    /**
+     * Request to insert a rows
+     * @param array $data API params
+     * @param string $token Authorization token
      * @return bool
      */
     private function insertRequest(array $data, string $token): bool
@@ -266,14 +223,8 @@ class Api extends \Core\Model
         try {
             $db = $this->getDB();
             $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
-                                                    SELECT (SELECT reg_user.id 
-                                                            FROM reg_user 
-                                                            WHERE api_token = :token), 
-                                                            :sku, 
-                                                            :product_name, 
-                                                            :supplier, 
-                                                            :price, 
-                                                            :cnt');
+                                            SELECT (SELECT reg_user.id FROM reg_user WHERE api_token = :token), 
+                                                   :sku, :product_name, :supplier, :price, :cnt');
 
             foreach ($data as $item) {
                 $result->execute([
@@ -292,8 +243,9 @@ class Api extends \Core\Model
     }
 
     /**
-     * @param array $data
-     * @param string $token
+     * Request to delete a rows
+     * @param array $data API params
+     * @param string $token Authorization token
      * @return bool
      */
     private function deleteRequest(array $data, string $token): bool
@@ -316,6 +268,5 @@ class Api extends \Core\Model
         } catch (\Exception) {
             return false;
         }
-
     }
 }

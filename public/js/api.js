@@ -143,3 +143,46 @@ function Delete() {
         },
     })
 }
+
+function Replace() {
+    $.ajax({
+        url: '/api/clients/',
+        method: 'POST',
+        headers: {'Authorization': TOKEN},
+        dataType: 'json',
+        data: {
+            'method': 'replace',
+            'params': [{
+                'sku': '000006890',
+                'product_name': 'Кофта',
+                'supplier': 'UPDATE',
+                'price': 122,
+                'cnt': 74
+            }, {
+                'sku': '000007777',
+                'product_name': 'Кофта',
+                'supplier': 'UPDATE',
+                'price': 122,
+                'cnt': 74
+            }, {
+                'sku': '000006666',
+                'product_name': 'Кофта',
+                'supplier': 'UPDATE',
+                'price': 122,
+                'cnt': 74
+            }, {
+                'sku': 'WWW',
+                'product_name': 'Куртка',
+                'supplier': 'UPDATE',
+                'price': 122,
+                'cnt': 74
+            }]
+        },
+        success: function (data) {
+            console.log(data)
+        },
+        error: function (jqXHD) {
+            console.log(jqXHD)
+        },
+    })
+}

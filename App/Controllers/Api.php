@@ -14,6 +14,7 @@ class Api extends \Core\Controller
     private const FAILED_TO_ADD_AN_OBJECT = 408;
     private const THE_OBJECT_COULD_NOT_BE_DELETED = 409;
     private const FAILED_TO_UPDATE_THE_OBJECT = 410;
+    private const THE_OBJECT_COULD_NOT_BE_REPLACED = 411;
     private const UNKNOWN_ERROR = 499;
 
     public function indexAction()
@@ -164,6 +165,32 @@ class Api extends \Core\Controller
     }
 
     /**
+     * @param array $data
+     * @param string $token
+     * @return void
+     * @throws Exception
+     */
+    private function replace(array $data, string $token): void
+    {
+        if (!$this->isCorrectData(__FUNCTION__, $data)) {
+            throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+        }
+
+        /* TODO что если динамически вызывать методы генерируя какой метод вызвать внутри.
+        Создать один каркас и там вызвать
+        Например  $resul = $api->$Переменная_с_название_метода($data, $token);*/
+
+        $api = new \App\Models\Api();
+        $resul = $api->replace($data, $token);
+
+        if ($resul === []) {
+            throw new Exception('Failed to replace data', self::THE_OBJECT_COULD_NOT_BE_REPLACED);
+        }
+
+        echo json_encode($data);
+    }
+
+    /**
      * Checks the validity of the data for the method
      * @param string $method Name of the method
      * @param array $data Data
@@ -184,6 +211,7 @@ class Api extends \Core\Controller
                 break;
             case 'add':
             case 'update':
+            case 'replace':
                 foreach ($data as $item) {
                     switch (true) {
                         case !array_key_exists('sku', $item):

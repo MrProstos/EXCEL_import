@@ -17,7 +17,12 @@ class Price extends \Core\Model
     public function insertDataImport(array $data): int
     {
         $db = $this->getDB();
-        $db->exec('TRUNCATE TABLE price');
+        $result = $db->prepare('DELETE price
+                                FROM price
+                                         INNER JOIN reg_user on price.user_id = reg_user.id
+                                WHERE reg_user.id = (SELECT id FROM reg_user WHERE reg_user.passwd = ?)');
+        $result->execute([$_COOKIE['hash']]);
+
         $nRow = 0;
 
         foreach ($data as $item) {
@@ -34,8 +39,10 @@ class Price extends \Core\Model
                 $price = $data['price']['value'][$i] ?? null;
                 $cnt = $data['cnt']['value'][$i] ?? null;
 
-                $result = $db->prepare("INSERT INTO price (sku, product_name, supplier, price, cnt) VALUES (?,?,?,?,?)");
-                $result->execute([$sku, $product_name, $supplier, $price, $cnt]);
+                $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
+                                                SELECT (SELECT id FROM reg_user WHERE passwd = ?), ?, ?, ?, ?, ?');
+
+                $result->execute([$_COOKIE['hash'], $sku, $product_name, $supplier, $price, $cnt]);
                 $nRow++;
             } catch
             (\PDOException $e) {
@@ -58,8 +65,13 @@ class Price extends \Core\Model
             $db = $this->getDB();
             $nRow *= 5;
 
-            $result = $db->prepare('SELECT price.sku, price.product_name, price.supplier, price.price, price.cnt FROM price LIMIT 5 OFFSET ?');
-            $result->bindParam(1, $nRow, PDO::PARAM_INT);
+            $result = $db->prepare('SELECT sku, product_name, supplier, price, cnt
+                                            FROM price
+                                                     INNER JOIN reg_user on price.user_id = reg_user.id
+                                            WHERE price.user_id = (SELECT id FROM reg_user WHERE reg_user.passwd = :hash)
+                                            LIMIT 5 OFFSET :nRow');
+            $result->bindParam(':nRow', $nRow, PDO::PARAM_INT);
+            $result->bindParam(':hash', $_COOKIE['hash']);
             $result->execute();
 
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -68,7 +80,7 @@ class Price extends \Core\Model
 
             $result = $db->query('SELECT COUNT(*) AS nAllRow FROM price');
             foreach ($result as $item) {
-                $dataArr['nAllRow'] = $item['nAllRow'] / 5 - 1; // TODO если удалить ( - 1 ) TWIG отваливается ( Argument #3 ($step) must not exceed the specified range )
+                $dataArr['nAllRow'] = $item['nAllRow'] / 5; // TODO если удалить ( - 1 ) TWIG отваливается ( Argument #3 ($step) must not exceed the specified range )
             }
 
             return $dataArr;

@@ -27,7 +27,7 @@
         </table>
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
             {% if data['nAllRow'] > 0 %}
-                <a class="pagination-next" href="/table/{{ data['nAllRow'] }}">В конец</a>
+                <a class="pagination-next" href="/table/{{ data['nAllRow']|round - 1 }}">В конец</a>
                 <a class="pagination-previous" href="/table/0">В начало</a>
                 <ul class="pagination-list">
                     {% for i in range(0, data['nAllRow']) %}
