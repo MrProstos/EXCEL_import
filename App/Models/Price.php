@@ -68,7 +68,7 @@ class Price extends \Core\Model
 
             $result = $db->query('SELECT COUNT(*) AS nAllRow FROM price');
             foreach ($result as $item) {
-                $dataArr['nAllRow'] = $item['nAllRow'] / 5 ;
+                $dataArr['nAllRow'] = $item['nAllRow'] / 5 - 1; // TODO если удалить ( - 1 ) TWIG отваливается ( Argument #3 ($step) must not exceed the specified range )
             }
 
             return $dataArr;

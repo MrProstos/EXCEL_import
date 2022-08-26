@@ -30,7 +30,7 @@
                 <a class="pagination-next" href="/table/{{ data['nAllRow'] }}">В конец</a>
                 <a class="pagination-previous" href="/table/0">В начало</a>
                 <ul class="pagination-list">
-                    {% for i in 0..data['nAllRow'] %}
+                    {% for i in range(0, data['nAllRow']) %}
 
                         {% if i < activePage + 3 and i > activePage - 3 %}
 
