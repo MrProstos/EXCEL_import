@@ -20,7 +20,7 @@ class Users extends \Core\Model
         try {
             $db =$this->getDB();
 
-            $result = $db->prepare("INSERT INTO mydb.reg_user (username, email, passwd, confirm_email) VALUES (?, ?, MD5(CONCAT(?, ?)), 'no')");
+            $result = $db->prepare("INSERT INTO reg_user (username, email, passwd, confirm_email) VALUES (?, ?, MD5(CONCAT(?, ?)), 'no')");
             $result->execute([$username, $email, $email, $passwd]);
 
             return true;
@@ -39,7 +39,7 @@ class Users extends \Core\Model
     {
         $db = $this->getDB();
 
-        $result = $db->prepare("SELECT * FROM mydb.reg_user WHERE passwd = ?");
+        $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = ?");
         $result->execute([$hash]);
 
         if ($result->rowCount() != 1) {
@@ -61,7 +61,7 @@ class Users extends \Core\Model
         try {
             $db = $this->getDB();
 
-            $result = $db->prepare("SELECT * FROM mydb.reg_user WHERE passwd = MD5(CONCAT(?,?)) AND confirm_email = 'yes'");
+            $result = $db->prepare("SELECT * FROM reg_user WHERE passwd = MD5(CONCAT(?,?)) AND confirm_email = 'yes'");
             $result->execute([$email, $passwd]);
 
             if ($result->rowCount() != 1) {
@@ -84,7 +84,7 @@ class Users extends \Core\Model
         try {
             $db = $this->getDB();
 
-            $result = $db->prepare("UPDATE mydb.reg_user SET confirm_email = 'yes' WHERE passwd = ?");
+            $result = $db->prepare("UPDATE reg_user SET confirm_email = 'yes' WHERE passwd = ?");
             $result->execute([$hash]);
 
             if ($result->rowCount() != 1) {

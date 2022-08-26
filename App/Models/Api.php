@@ -15,7 +15,7 @@ class Api extends \Core\Model
     {
         $db = $this->getDB();
 
-        $result = $db->prepare('SELECT api_token FROM mydb.reg_user WHERE passwd = :hash');
+        $result = $db->prepare('SELECT api_token FROM reg_user WHERE passwd = :hash');
         $result->execute([':hash' => $hash]);
 
         $row = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -23,7 +23,7 @@ class Api extends \Core\Model
 
         if ($token === '') {
             $token = uniqid('', true);
-            $result = $db->prepare('UPDATE mydb.reg_user SET api_token = :token WHERE passwd = :hash');
+            $result = $db->prepare('UPDATE reg_user SET api_token = :token WHERE passwd = :hash');
             $result->execute([':token' => $token, ':hash' => $hash]);
         }
         return $token;
@@ -39,7 +39,7 @@ class Api extends \Core\Model
         if ($token != '') {
             $db = $this->getDB();
 
-            $result = $db->prepare('SELECT * FROM mydb.reg_user WHERE api_token = :token');
+            $result = $db->prepare('SELECT * FROM reg_user WHERE api_token = :token');
             $result->execute([':token' => $token]);
             if ($result->rowCount() != 1) {
                 return false;
@@ -86,15 +86,15 @@ class Api extends \Core\Model
     {
         try {
             $db = $this->getDB();
-            $result = $db->prepare('INSERT INTO mydb.price (user_id, sku, product_name, supplier, price, cnt) 
-                            SELECT (SELECT reg_user.id
-                                FROM mydb.reg_user
-                                WHERE reg_user.api_token = :token),
-                               :sku,
-                               :product_name,
-                               :supplier,
-                               :price,
-                               :cnt');
+            $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt) 
+                                            SELECT (SELECT reg_user.id
+                                                FROM reg_user
+                                                WHERE reg_user.api_token = :token),
+                                               :sku,
+                                               :product_name,
+                                               :supplier,
+                                               :price,
+                                               :cnt');
 
             foreach ($data as $item) {
                 $result->execute([
@@ -107,7 +107,7 @@ class Api extends \Core\Model
                 ]);
             }
             return $data;
-        } catch (\PDOException) { // TODO проверить как будет работать с PDOException
+        } catch (\PDOException) {
             return [];
         }
     }
@@ -122,28 +122,65 @@ class Api extends \Core\Model
     {
         try {
             $db = $this->getDB();
-            $result = $db->prepare('UPDATE mydb.price INNER JOIN mydb.reg_user on reg_user.id = price.user_id
-                                            SET product_name = :product_name,
-                                                supplier     = :supplier,
-                                                price        = :price,
-                                                cnt          = :cnt
-                                            WHERE price.user_id = (SELECT reg_user.id FROM mydb.reg_user WHERE api_token = :token)
-                                              AND price.sku = :sku');
+            // Record search sku
+            $rowExists = $db->prepare('SELECT sku
+                                                FROM price
+                                                         INNER JOIN reg_user ru on price.user_id = ru.id
+                                                WHERE price.user_id = (SELECT id FROM reg_user WHERE api_token = :token)
+                                                  AND sku = :sku ');
 
             $response = [];
 
             foreach ($data as $item) {
-                // TODO добавить проверку существования записи
-                $result->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku'],
-                    ':product_name' => $item['product_name'],
-                    ':supplier' => $item['supplier'],
-                    ':price' => $item['price'],
-                    ':cnt' => $item['cnt']
-                ]);
+                $rowExists->execute([':token' => $token, ':sku' => $item['sku']]);
+                // If there is a sku entry
+                if ($rowExists->rowCount() != 0) {
+                    $result = $db->prepare('UPDATE price INNER JOIN reg_user on reg_user.id = price.user_id
+                                            SET product_name = :product_name,
+                                                supplier     = :supplier,
+                                                price        = :price,
+                                                cnt          = :cnt
+                                            WHERE price.user_id = (SELECT reg_user.id FROM reg_user WHERE api_token = :token)
+                                              AND price.sku = :sku');
 
-                $response[] = ['sku' => $item['sku']];
+                    $result->execute([
+                        ':token' => $token,
+                        ':sku' => $item['sku'],
+                        ':product_name' => $item['product_name'],
+                        ':supplier' => $item['supplier'],
+                        ':price' => $item['price'],
+                        ':cnt' => $item['cnt']
+                    ]);
+
+                    $response[] = ['sku' => $item['sku']];
+                } else {
+                    $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
+                                                    SELECT (SELECT reg_user.id 
+                                                            FROM reg_user 
+                                                            WHERE api_token = :token), 
+                                                            :sku, 
+                                                            :product_name, 
+                                                            :supplier, 
+                                                            :price, 
+                                                            :cnt');
+
+                    $result->execute([
+                        ':token' => $token,
+                        ':sku' => $item['sku'],
+                        ':product_name' => $item['product_name'],
+                        ':supplier' => $item['supplier'],
+                        ':price' => $item['price'],
+                        ':cnt' => $item['cnt']
+                    ]);
+
+                    $response[] = [
+                        ':sku' => $item['sku'],
+                        ':product_name' => $item['product_name'],
+                        ':supplier' => $item['supplier'],
+                        ':price' => $item['price'],
+                        ':cnt' => $item['cnt']
+                    ];
+                }
             }
             return $response;
         } catch (\PDOException) {
@@ -163,9 +200,9 @@ class Api extends \Core\Model
             $result = $db->prepare('DELETE price
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id
-                                            WHERE reg_user.id = :token
+                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)
                                               AND price.sku = :sku');
-            //TODO доделать
+
             foreach ($data as $item) {
                 $result->execute([
                     ':token' => $token,

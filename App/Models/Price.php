@@ -34,7 +34,7 @@ class Price extends \Core\Model
                 $price = $data['price']['value'][$i] ?? null;
                 $cnt = $data['cnt']['value'][$i] ?? null;
 
-                $result = $db->prepare("INSERT INTO mydb.price (sku, product_name, supplier, price, cnt) VALUES (?,?,?,?,?)");
+                $result = $db->prepare("INSERT INTO price (sku, product_name, supplier, price, cnt) VALUES (?,?,?,?,?)");
                 $result->execute([$sku, $product_name, $supplier, $price, $cnt]);
                 $nRow++;
             } catch
@@ -58,7 +58,7 @@ class Price extends \Core\Model
             $db = $this->getDB();
             $nRow *= 5;
 
-            $result = $db->prepare('SELECT price.sku, price.product_name, price.supplier, price.price, price.cnt FROM mydb.price LIMIT 5 OFFSET ?');
+            $result = $db->prepare('SELECT price.sku, price.product_name, price.supplier, price.price, price.cnt FROM price LIMIT 5 OFFSET ?');
             $result->bindParam(1, $nRow, PDO::PARAM_INT);
             $result->execute();
 
@@ -66,7 +66,7 @@ class Price extends \Core\Model
                 $dataArr['data'][] = $row;
             }
 
-            $result = $db->query('SELECT COUNT(*) AS nAllRow FROM mydb.price');
+            $result = $db->query('SELECT COUNT(*) AS nAllRow FROM price');
             foreach ($result as $item) {
                 $dataArr['nAllRow'] = $item['nAllRow'] / 5 ;
             }

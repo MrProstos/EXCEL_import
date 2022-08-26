@@ -151,7 +151,16 @@ class Api extends \Core\Controller
             foreach ($data as $item) {
                 switch (true) {
                     case !array_key_exists('sku', $item):
+                    case !array_key_exists('product_name', $item):
+                    case !array_key_exists('supplier', $item):
+                    case !array_key_exists('price', $item):
+                    case !array_key_exists('cnt', $item):
+
                     case array_search('sku', $item) === '':
+                    case array_search('product_name', $item) === '':
+                    case array_search('supplier', $item) === '':
+                    case array_search('price', $item) === '':
+                    case array_search('cnt', $item) === '':
                         throw new \Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
                 }
             }
@@ -171,7 +180,49 @@ class Api extends \Core\Controller
 
     private function delete(array $data, string $token)
     {
-        echo json_encode($data); //TODO сделать
+
+    }
+
+    /**
+     * Checks the validity of the data for the method
+     * @param string $method Name of the method
+     * @param array $data Data
+     * @return bool
+     */
+    private function isCorrectData(string $method, array $data): bool
+    {
+        switch ($method) {
+            case 'get':
+            case 'delete':
+                foreach ($data as $item) {
+                    switch (true) {
+                        case !array_key_exists('sku', $item):
+                        case array_search('sku', $item) === '':
+                            return false;
+                    }
+                }
+                break;
+            case 'add':
+            case 'update':
+                foreach ($data as $item) {
+                    switch (true) {
+                        case !array_key_exists('sku', $item):
+                        case !array_key_exists('product_name', $item):
+                        case !array_key_exists('supplier', $item):
+                        case !array_key_exists('price', $item):
+                        case !array_key_exists('cnt', $item):
+
+                        case array_search('sku', $item) === '':
+                        case array_search('product_name', $item) === '':
+                        case array_search('supplier', $item) === '':
+                        case array_search('price', $item) === '':
+                        case array_search('cnt', $item) === '':
+                            return false;
+                    }
+                }
+                break;
+        }
+        return true;
     }
 
 
