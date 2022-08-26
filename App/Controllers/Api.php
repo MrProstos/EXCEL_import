@@ -88,7 +88,7 @@ class Api extends \Core\Controller
 
         $result = $api->get($data, $token);
         if ($result === []) {
-            throw new Exception('Failed to get data', self::FAILED_TO_ADD_AN_OBJECT,);
+            throw new Exception('Failed to get data', self::OBJECT_NOT_FOUND,);
         }
 
         echo json_encode($result);
@@ -157,7 +157,7 @@ class Api extends \Core\Controller
         $resul = $api->delete($data, $token);
 
         if ($resul === []) {
-            throw new Exception('Failed to delete data', self::FAILED_TO_UPDATE_THE_OBJECT);
+            throw new Exception('Failed to delete data', self::THE_OBJECT_COULD_NOT_BE_DELETED);
         }
 
         echo json_encode($data);

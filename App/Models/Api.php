@@ -189,6 +189,7 @@ class Api extends \Core\Model
     }
 
     /**
+     * Delete data
      * @param array $data API params
      * @param string $token Authorization token
      * @return array Delete data
@@ -215,5 +216,106 @@ class Api extends \Core\Model
         }
     }
 
+    public function replace(array $data, string $token)
+    {
+        try {
+            $db = $this->getDB();
+            $result = $db->prepare('DELETE price
+                                            FROM price
+                                                     INNER JOIN reg_user on price.user_id = reg_user.id
+                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)
+                                              AND price.sku = :sku');
 
+            foreach ($data as $item) {
+                $result->execute([
+                    ':token' => $token,
+                    ':sku' => $item['sku']
+                ]);
+
+                $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
+                                                    SELECT (SELECT reg_user.id 
+                                                            FROM reg_user 
+                                                            WHERE api_token = :token), 
+                                                            :sku, 
+                                                            :product_name, 
+                                                            :supplier, 
+                                                            :price, 
+                                                            :cnt');
+
+                $result->execute([
+                    ':token' => $token,
+                    ':sku' => $item['sku'],
+                    ':product_name' => $item['product_name'],
+                    ':supplier' => $item['supplier'],
+                    ':price' => $item['price'],
+                    ':cnt' => $item['cnt']
+                ]);
+            }
+        } catch (\PDOException) {
+            return [];
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param string $token
+     * @return bool
+     */
+    private function insertRequest(array $data, string $token): bool
+    {
+        try {
+            $db = $this->getDB();
+            $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
+                                                    SELECT (SELECT reg_user.id 
+                                                            FROM reg_user 
+                                                            WHERE api_token = :token), 
+                                                            :sku, 
+                                                            :product_name, 
+                                                            :supplier, 
+                                                            :price, 
+                                                            :cnt');
+
+            foreach ($data as $item) {
+                $result->execute([
+                    ':token' => $token,
+                    ':sku' => $item['sku'],
+                    ':product_name' => $item['product_name'],
+                    ':supplier' => $item['supplier'],
+                    ':price' => $item['price'],
+                    ':cnt' => $item['cnt']
+                ]);
+            }
+            return true;
+        } catch (\PDOException) {
+            return false;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param string $token
+     * @return bool
+     */
+    private function deleteRequest(array $data, string $token): bool
+    {
+        try {
+            $db = $this->getDB();
+            $result = $db->prepare('DELETE price
+                                            FROM price
+                                                     INNER JOIN reg_user on price.user_id = reg_user.id
+                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)
+                                              AND price.sku = :sku');
+
+            foreach ($data as $item) {
+                $result->execute([
+                    ':token' => $token,
+                    ':sku' => $item['sku']
+                ]);
+            }
+            return true;
+        } catch (\Exception) {
+            return false;
+        }
+
+    }
 }
