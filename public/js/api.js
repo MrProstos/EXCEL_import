@@ -12,6 +12,63 @@ function getToken() {
     })
 }
 
+function generateData(method, num) {
+    let randStr = function () {
+        let chars = 'abdehkmnpswxzABDEFGHKMNPQRSTWXZ123456789';
+        let str = '';
+        for (let i = 0; i < 8; i++) {
+            let pos = Math.floor(Math.random() * chars.length);
+            str += chars.substring(pos, pos + 1);
+        }
+        return str;
+    }
+
+    let data = []
+
+    for (let i = 0; i < num; i++) {
+        switch (method) {
+            case 'get':
+            case 'delete':
+                data.push({'sku': randStr(),})
+                break
+            case 'add':
+            case 'update':
+            case 'replace':
+                data.push({
+                    'sku': randStr(),
+                    'product_name': randStr(),
+                    'supplier': randStr(),
+                    'price': Math.floor(Math.random() * num * 10),
+                    'cnt': Math.floor(Math.random() * num * 10)
+                })
+        }
+    }
+    return data
+}
+
+function randomDataSend() {
+    let method = ['add', 'update', 'get', 'replace', 'delete']
+    for (let index = 0; index < method.length; index++) {
+        $.ajax({
+            url: '/api/clients/',
+            method: 'POST',
+            headers: {'Authorization': TOKEN},
+            dataType: 'json',
+            async: false,
+            data: {
+                'method': method[index],
+                'params': generateData(method[index], 10)
+            },
+            success: function (data, status) {
+                console.log('Метод: ' + method[index], status, data)
+            },
+            error: function (jqXHD) {
+                console.log(jqXHD)
+            },
+        })
+    }
+}
+
 function Add() {
     $.ajax({
         url: '/api/clients/',
@@ -106,7 +163,7 @@ function Get() {
                 'sku': '000007777',
             }, {
                 'sku': '000006666',
-            },{
+            }, {
                 'sku': 'WWW',
             }]
         },
@@ -126,7 +183,7 @@ function Delete() {
         headers: {'Authorization': TOKEN},
         dataType: 'json',
         data: {
-            // 'method': 'delete',
+            'method': 'delete',
             'params': [{
                 'sku': '000006890',
             }, {
