@@ -55,7 +55,7 @@ class Api extends \Core\Model
      * @param string $token Authorization token
      * @return array Get data
      */
-    public function get(array $data, string $token): array
+    public function getActionDB(array $data, string $token): array
     {
         return $this->selectRequest($data, $token);
     }
@@ -66,7 +66,7 @@ class Api extends \Core\Model
      * @param string $token Authorization token
      * @return array Added data
      */
-    public function add(array $data, string $token): array
+    public function addActionDB(array $data, string $token): array
     {
         if (!$this->insertRequest($data, $token)) {
             return [];
@@ -80,7 +80,7 @@ class Api extends \Core\Model
      * @param string $token Authorization token
      * @return array Update data
      */
-    public function update(array $data, string $token): array
+    public function updateActionDB(array $data, string $token): array
     {
         try {
             $db = $this->getDB();
@@ -139,7 +139,7 @@ class Api extends \Core\Model
      * @param string $token Authorization token
      * @return array Delete data
      */
-    public function delete(array $data, string $token): array
+    public function deleteActionDB(array $data, string $token): array
     {
         if (!$this->deleteRequest($data, $token)) {
             return [];
@@ -153,7 +153,7 @@ class Api extends \Core\Model
      * @param string $token Authorization token
      * @return array
      */
-    public function replace(array $data, string $token): array
+    public function replaceActionDB(array $data, string $token): array
     {
         try {
             $db = $this->getDB();
@@ -179,7 +179,7 @@ class Api extends \Core\Model
      * @param string $token Authorization token
      * @return array
      */
-    public function selectRequest(array $data, string $token): array
+    private function selectRequest(array $data, string $token): array
     {
         try {
             $db = $this->getDB();

@@ -4,7 +4,8 @@
     "ext-pdo": "*",
     "phpoffice/phpspreadsheet": "^1.24",
     "phpmailer/phpmailer": "^6.5",
-    "ext-fileinfo": "*"
+    "ext-fileinfo": "*",
+    "ext-mysqli": "*"
   },
   "autoload": {
     "psr-4": {

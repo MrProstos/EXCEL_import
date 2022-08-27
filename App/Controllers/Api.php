@@ -64,7 +64,7 @@ class Api extends \Core\Controller
                 throw new Exception('Invalid token', self::UNAUTHORIZED);
             }
 
-            $method = $_POST['method'];
+            $method = $_POST['method'] . 'ActionDB';
             $data = $_POST['params'];
             if (!method_exists($api, $method)) {
                 throw new Exception('There is no such method', self::UNKNOWN_METHOD);
