@@ -54,10 +54,15 @@ class Api extends \Core\Model
      * @param array $data API params
      * @param string $token Authorization token
      * @return array Get data
+     * @throws \Exception
      */
     public function getActionDB(array $data, string $token): array
     {
-        return $this->selectRequest($data, $token);
+        $newData = $this->selectRequest($data, $token);
+        if (!$newData) {
+            throw new \Exception('UNKNOWN ERROR', \App\Controllers\Api::UNKNOWN_ERROR);
+        };
+        return $newData;
     }
 
     /**
@@ -65,11 +70,12 @@ class Api extends \Core\Model
      * @param array $data API params
      * @param string $token Authorization token
      * @return array Added data
+     * @throws \Exception
      */
     public function addActionDB(array $data, string $token): array
     {
         if (!$this->insertRequest($data, $token)) {
-            return [];
+            throw new \Exception('Failed to add an object', \App\Controllers\Api::FAILED_TO_ADD_AN_OBJECT);
         }
         return $data;
     }
@@ -79,6 +85,7 @@ class Api extends \Core\Model
      * @param array $data API params
      * @param string $token Authorization token
      * @return array Update data
+     * @throws \Exception
      */
     public function updateActionDB(array $data, string $token): array
     {
@@ -129,7 +136,7 @@ class Api extends \Core\Model
             }
             return $response;
         } catch (\PDOException) {
-            return [];
+            throw new \Exception('Failed to update the object', \App\Controllers\Api::FAILED_TO_UPDATE_THE_OBJECT);
         }
     }
 
@@ -138,11 +145,12 @@ class Api extends \Core\Model
      * @param array $data API params
      * @param string $token Authorization token
      * @return array Delete data
+     * @throws \Exception
      */
     public function deleteActionDB(array $data, string $token): array
     {
         if (!$this->deleteRequest($data, $token)) {
-            return [];
+            throw new \Exception('The object could not be deleted', \App\Controllers\Api::THE_OBJECT_COULD_NOT_BE_DELETED);
         }
         return $data;
     }
@@ -152,6 +160,7 @@ class Api extends \Core\Model
      * @param array $data API params
      * @param string $token Authorization token
      * @return array
+     * @throws \Exception
      */
     public function replaceActionDB(array $data, string $token): array
     {
@@ -164,12 +173,13 @@ class Api extends \Core\Model
             $result->execute([':token' => $token]);
 
             if (!$this->insertRequest($data, $token)) {
-                return [];
+                throw new \Exception('Failed to add an object', \App\Controllers\Api::FAILED_TO_ADD_AN_OBJECT);
             }
 
             return $data;
         } catch (\PDOException) {
-            return [];
+            throw new \Exception('The object could not be replaced', \App\Controllers\Api::THE_OBJECT_COULD_NOT_BE_REPLACED);
+
         }
     }
 
@@ -177,9 +187,9 @@ class Api extends \Core\Model
      * Request to get a rows
      * @param array $data API params
      * @param string $token Authorization token
-     * @return array
+     * @return array|bool
      */
-    private function selectRequest(array $data, string $token): array
+    private function selectRequest(array $data, string $token): array|bool
     {
         try {
             $db = $this->getDB();
@@ -202,12 +212,12 @@ class Api extends \Core\Model
                         $newData[] = $row;
                     }
                 } else {
-                    $newData[] = ['sku' => $item['sku']];
+                    $newData[] = ['sku' => $item['sku'], 'status' => \App\Controllers\Api::OBJECT_NOT_FOUND];
                 }
             }
             return $newData;
         } catch (\PDOException) {
-            return [];
+            return false;
         }
     }
 

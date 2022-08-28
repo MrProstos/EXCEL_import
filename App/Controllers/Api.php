@@ -7,15 +7,15 @@ use Exception;
 
 class Api extends \Core\Controller
 {
-    private const UNAUTHORIZED = 401;
-    private const UNKNOWN_METHOD = 405;
-    private const OBJECT_NOT_FOUND = 406;
-    private const SCHEMA_ERROR_DATA = 407;
-    private const FAILED_TO_ADD_AN_OBJECT = 408;
-    private const THE_OBJECT_COULD_NOT_BE_DELETED = 409;
-    private const FAILED_TO_UPDATE_THE_OBJECT = 410;
-    private const THE_OBJECT_COULD_NOT_BE_REPLACED = 411;
-    private const UNKNOWN_ERROR = 499;
+    public const UNAUTHORIZED = 401;
+    public const UNKNOWN_METHOD = 405;
+    public const OBJECT_NOT_FOUND = 406;
+    public const SCHEMA_ERROR_DATA = 407;
+    public const FAILED_TO_ADD_AN_OBJECT = 408;
+    public const THE_OBJECT_COULD_NOT_BE_DELETED = 409;
+    public const FAILED_TO_UPDATE_THE_OBJECT = 410;
+    public const THE_OBJECT_COULD_NOT_BE_REPLACED = 411;
+    public const UNKNOWN_ERROR = 499;
 
     public function indexAction()
     {
@@ -75,10 +75,6 @@ class Api extends \Core\Controller
             }
 
             $result = $api->$method($data, $token);
-            if ($result === []) {
-                throw new Exception('Unknown error', self::UNKNOWN_ERROR);
-            }
-
             echo json_encode($result);
         } catch (Exception $e) {
             $this->sendError($e->getCode(), $e->getMessage());

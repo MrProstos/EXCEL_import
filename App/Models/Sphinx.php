@@ -21,7 +21,12 @@ class Sphinx extends Model
         return self::$sphinxConn;
     }
 
-    public function searchSku(string $word): array
+    /**
+     * Search for records
+     * @param string $word A word or part of a word
+     * @return array
+     */
+    public function searchProductName(string $word): array
     {
         $searchQuery = "@product_name ^$word*";
         try {
