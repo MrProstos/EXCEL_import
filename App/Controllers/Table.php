@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Price;
+use App\Models\Sphinx;
 use App\Models\Users;
 use Core\View;
 
@@ -37,5 +38,12 @@ class Table extends \Core\Controller
             return false;
         }
         return $dataTable;
+    }
+
+    public function searchAction()
+    {
+        $word = $_POST['search_word'];
+        $search = new Sphinx();
+        echo json_encode($search->searchSku($word));
     }
 }

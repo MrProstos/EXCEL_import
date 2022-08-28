@@ -2,6 +2,7 @@
 
 const TOKEN = '63070b4c04a604.64646160'
 
+//Get a token
 function getToken() {
     Cookies.get('hash')
     $.get('/api/token/' + Cookies.get('hash'), function (data, status) {
@@ -12,6 +13,7 @@ function getToken() {
     })
 }
 
+//Generate data for the API
 function generateData(method, num) {
     let randStr = function () {
         let chars = 'abdehkmnpswxzABDEFGHKMNPQRSTWXZ123456789';
@@ -46,6 +48,7 @@ function generateData(method, num) {
     return data
 }
 
+//Send data
 function randomDataSend() {
     let method = ['add', 'update', 'get', 'replace', 'delete']
     for (let index = 0; index < method.length; index++) {
@@ -57,7 +60,7 @@ function randomDataSend() {
             async: false,
             data: {
                 'method': method[index],
-                'params': generateData(method[index], 10)
+                'params': generateData(method[index], 20)
             },
             success: function (data, status) {
                 console.log('Метод: ' + method[index], status, data)

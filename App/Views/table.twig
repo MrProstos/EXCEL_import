@@ -2,6 +2,16 @@
 {% block content %}
     <div class="box import width">
         {% include 'navbar.twig' %}
+        <div class="field has-addons ">
+            <div class="control is-expanded">
+                <input class="input search__input" type="text">
+            </div>
+            <div class="control">
+                <a class="button is-info" onclick="Reset()">Очистить</a>
+            </div>
+        </div>
+
+        <script>Search()</script>
         <table class="table result-table">
             <thead>
             <tr>

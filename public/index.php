@@ -23,6 +23,7 @@ if ($db->isAuth()) {
     $router->add('/import/insertTable/', ['controller' => 'Import', 'action' => 'insertTable']);
 
     $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
+    $router->add('/search/',['controller' => 'Table', 'action' => 'search']);
 
     $router->add('/api/',['controller' => 'Api', 'action' => 'index']);
     $router->add('/api/token/{hash:[a-zA-z0-9]+}',['controller' => 'Api', 'action' => 'getToken']);
