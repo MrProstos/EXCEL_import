@@ -51,6 +51,7 @@ class Api extends \Core\Controller
      */
     public function chooseMethodAction(): void
     {
+        // TODO создать функцию обработки пользовательских ошибок. Создать свой класс наследуемый от Exception
         try {
             if (!isset($_POST['method']) || !isset($_POST['params'])) {
                 throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
