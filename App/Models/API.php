@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\UserException;
 use PDO;
 
-class Api extends \Core\Model
+class API extends \Core\Model
 {
+    /**
+     * @var int
+     */
+    private int $userId;
+
     /**
      * Get token
      * @param string $hash Cookies hash
@@ -39,11 +45,15 @@ class Api extends \Core\Model
         if ($token != '') {
             $db = $this->getDB();
 
-            $result = $db->prepare('SELECT * FROM reg_user WHERE api_token = :token');
+            $result = $db->prepare('SELECT id FROM reg_user WHERE api_token = :token');
             $result->execute([':token' => $token]);
             if ($result->rowCount() != 1) {
                 return false;
             }
+
+            $row = $result->fetch();
+            $this->userId = $row['id'];
+
             return true;
         }
         return false;
@@ -52,15 +62,14 @@ class Api extends \Core\Model
     /**
      * Getting records from a database
      * @param array $data API params
-     * @param string $token Authorization token
      * @return array Get data
-     * @throws \Exception
+     * @throws UserException
      */
-    public function getActionDB(array $data, string $token): array
+    public function getActionDB(array $data): array
     {
-        $newData = $this->selectRequest($data, $token);
+        $newData = $this->selectRequest($data);
         if (!$newData) {
-            throw new \Exception('UNKNOWN ERROR', \App\Controllers\Api::UNKNOWN_ERROR);
+            throw new UserException('UNKNOWN ERROR', \App\Controllers\API::UNKNOWN_ERROR);
         };
         return $newData;
     }
@@ -68,14 +77,13 @@ class Api extends \Core\Model
     /**
      * Adds entries to the database
      * @param array $data API params
-     * @param string $token Authorization token
      * @return array Added data
-     * @throws \Exception
+     * @throws UserException
      */
-    public function addActionDB(array $data, string $token): array
+    public function addActionDB(array $data): array
     {
-        if (!$this->insertRequest($data, $token)) {
-            throw new \Exception('Failed to add an object', \App\Controllers\Api::FAILED_TO_ADD_AN_OBJECT);
+        if (!$this->insertRequest($data)) {
+            throw new UserException('Failed to add an object', \App\Controllers\API::FAILED_TO_ADD_AN_OBJECT);
         }
         return $data;
     }
@@ -83,37 +91,29 @@ class Api extends \Core\Model
     /**
      * Updating data
      * @param array $data API params
-     * @param string $token Authorization token
      * @return array Update data
-     * @throws \Exception
+     * @throws UserException
      */
-    public function updateActionDB(array $data, string $token): array
+    public function updateActionDB(array $data): array
     {
         try {
             $db = $this->getDB();
-            // Record search sku
-            $rowExists = $db->prepare('SELECT *
-                                                FROM price
-                                                         INNER JOIN reg_user ru on price.user_id = ru.id
-                                                WHERE price.user_id = (SELECT id FROM reg_user WHERE api_token = :token)
-                                                  AND sku = :sku ');
 
             $response = [];
-
             foreach ($data as $item) {
-                $rowExists->execute([':token' => $token, ':sku' => $item['sku']]);
+
                 // If there is a sku entry
-                if ($rowExists->rowCount() != 0) {
+                if ($this->rowsFind($item['sku']) > 0) {
                     $result = $db->prepare('UPDATE price INNER JOIN reg_user on reg_user.id = price.user_id
                                             SET product_name = :product_name,
                                                 supplier     = :supplier,
                                                 price        = :price,
                                                 cnt          = :cnt
-                                            WHERE price.user_id = (SELECT reg_user.id FROM reg_user WHERE api_token = :token)
+                                            WHERE price.user_id = :userId
                                               AND price.sku = :sku');
 
                     $result->execute([
-                        ':token' => $token,
+                        ':userId' => $this->userId,
                         ':sku' => $item['sku'],
                         ':product_name' => $item['product_name'],
                         ':supplier' => $item['supplier'],
@@ -123,7 +123,7 @@ class Api extends \Core\Model
 
                     $response[] = ['sku' => $item['sku']];
                 } else {
-                    $this->insertRequest($data, $token);
+                    $this->insertRequest($data);
 
                     $response[] = [
                         ':sku' => $item['sku'],
@@ -136,49 +136,49 @@ class Api extends \Core\Model
             }
             return $response;
         } catch (\PDOException) {
-            throw new \Exception('Failed to update the object', \App\Controllers\Api::FAILED_TO_UPDATE_THE_OBJECT);
+            throw new UserException('Failed to update the object', \App\Controllers\API::FAILED_TO_UPDATE_THE_OBJECT);
         }
     }
 
     /**
      * Delete data
      * @param array $data API params
-     * @param string $token Authorization token
      * @return array Delete data
-     * @throws \Exception
+     * @throws UserException
      */
-    public function deleteActionDB(array $data, string $token): array
+    public function deleteActionDB(array $data): array
     {
-        if (!$this->deleteRequest($data, $token)) {
-            throw new \Exception('The object could not be deleted', \App\Controllers\Api::THE_OBJECT_COULD_NOT_BE_DELETED);
+        $result = $this->deleteRequest($data);
+        if ($result == []) {
+            throw new UserException('The object could not be deleted', \App\Controllers\API::THE_OBJECT_COULD_NOT_BE_DELETED);
         }
-        return $data;
+
+        return $result;
     }
 
     /**
      * Remove old values and add new ones
      * @param array $data API params
-     * @param string $token Authorization token
      * @return array
-     * @throws \Exception
+     * @throws UserException
      */
-    public function replaceActionDB(array $data, string $token): array
+    public function replaceActionDB(array $data): array
     {
         try {
             $db = $this->getDB();
             $result = $db->prepare('DELETE price
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id
-                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)');
-            $result->execute([':token' => $token]);
+                                            WHERE reg_user.id = :userId');
+            $result->execute([':userId' => $this->userId]);
 
-            if (!$this->insertRequest($data, $token)) {
-                throw new \Exception('Failed to add an object', \App\Controllers\Api::FAILED_TO_ADD_AN_OBJECT);
+            if (!$this->insertRequest($data)) {
+                throw new UserException('Failed to add an object', \App\Controllers\API::FAILED_TO_ADD_AN_OBJECT);
             }
 
             return $data;
         } catch (\PDOException) {
-            throw new \Exception('The object could not be replaced', \App\Controllers\Api::THE_OBJECT_COULD_NOT_BE_REPLACED);
+            throw new UserException('The object could not be replaced', \App\Controllers\API::THE_OBJECT_COULD_NOT_BE_REPLACED);
 
         }
     }
@@ -186,37 +186,41 @@ class Api extends \Core\Model
     /**
      * Request to get a rows
      * @param array $data API params
-     * @param string $token Authorization token
      * @return array|bool
      */
-    private function selectRequest(array $data, string $token): array|bool
+    private function selectRequest(array $data): array|bool
     {
         try {
             $db = $this->getDB();
             $rowExists = $db->prepare('SELECT sku, product_name, supplier, price, cnt
                                                 FROM price
-                                                         INNER JOIN reg_user ru on price.user_id = ru.id
-                                                WHERE price.user_id = (SELECT id FROM reg_user WHERE api_token = :token)
-                                                  AND sku = :sku ');
+                                                         INNER JOIN reg_user on price.user_id = reg_user.id
+                                                WHERE price.user_id = :userId
+                                                  AND sku = :sku');
 
             $newData = [];
 
             foreach ($data as $item) {
                 $rowExists->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku']
+                    ':sku' => $item['sku'],
+                    ':userId' => $this->userId
                 ]);
 
-                if ($rowExists->rowCount() != 0) {
+                if ($rowExists->rowCount() > 0) {
                     foreach ($rowExists->fetchAll(PDO::FETCH_ASSOC) as $row) {
                         $newData[] = $row;
                     }
                 } else {
-                    $newData[] = ['sku' => $item['sku'], 'status' => \App\Controllers\Api::OBJECT_NOT_FOUND];
+                    $newData[] = [
+                        'sku' => $item['sku'],
+                        'status' => \App\Controllers\API::OBJECT_NOT_FOUND,
+                        'message' => 'Object not found'
+                    ];
                 }
             }
             return $newData;
-        } catch (\PDOException) {
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
             return false;
         }
     }
@@ -225,20 +229,18 @@ class Api extends \Core\Model
     /**
      * Request to insert a rows
      * @param array $data API params
-     * @param string $token Authorization token
      * @return bool
      */
-    private function insertRequest(array $data, string $token): bool
+    private function insertRequest(array $data): bool
     {
         try {
             $db = $this->getDB();
             $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
-                                            SELECT (SELECT reg_user.id FROM reg_user WHERE api_token = :token), 
-                                                   :sku, :product_name, :supplier, :price, :cnt');
+                                            values (:userId, :sku, :product_name, :supplier, :price, :cnt)');
 
             foreach ($data as $item) {
                 $result->execute([
-                    ':token' => $token,
+                    ':userId' => $this->userId,
                     ':sku' => $item['sku'],
                     ':product_name' => $item['product_name'],
                     ':supplier' => $item['supplier'],
@@ -255,31 +257,59 @@ class Api extends \Core\Model
     /**
      * Request to delete a rows
      * @param array $data API params
-     * @param string $token Authorization token
-     * @return bool
      */
-    private function deleteRequest(array $data, string $token): bool
+    private function deleteRequest(array $data): array
     {
         try {
             $db = $this->getDB();
+            //TODO implode() DELETE FROM table WHERE sku IN (xxx, yyyy, bbbb) изменить
             $result = $db->prepare('DELETE price
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id
-                                            WHERE reg_user.id = (SELECT id FROM reg_user WHERE api_token = :token)
-                                              AND price.sku = :sku');
+                                            WHERE reg_user.id = :userId AND price.sku = :sku');
 
+            $response = [];
             foreach ($data as $item) {
-                $result->execute([
-                    ':token' => $token,
-                    ':sku' => $item['sku']
-                ]);
+
+                if ($this->rowsFind($item['sku']) > 0) {
+                    $result->execute([
+                        ':userId' => $this->userId,
+                        ':sku' => $item['sku']
+                    ]);
+
+                    $response[] = ['sku' => $item['sku']];
+                } else {
+                    $response[] = [
+                        'sku' => $item['sku'],
+                        'status' => \App\Controllers\API::THE_OBJECT_COULD_NOT_BE_DELETED,
+                        'message' => 'THE_OBJECT_COULD_NOT_BE_DELETED'
+                    ];
+                }
             }
-            return true;
-        } catch (\Exception) {
-            return false;
+
+            return $response;
+        } catch (\PDOException) {
+            return [];
         }
+    }
+
+
+    /**
+     * Does the record exist
+     * @param string $sku
+     * @return int Number of lines
+     */
+    private function rowsFind(string $sku): int
+    {
+        $db = $this->getDB();
+
+        $result = $db->prepare('SELECT * FROM price WHERE sku = :sku AND user_id = :userId');
+        $result->execute([
+            'sku' => $sku,
+            'userId' => $this->userId
+        ]);
+
+        return $result->rowCount();
     }
 }
 
-// TODO Данные в виде запроса к АПИ могут быть как в виде одиночных позиции, так и в виде массива товаров.
-// TODO Дополнительно нужен standalone скрипт, который будет эммулировать запросы к API в части добавления данных. В качестве данных можно использовать случайные генерируенмые значения.

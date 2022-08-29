@@ -15,21 +15,22 @@ set_exception_handler('Core\Error::exceptionHandler');
  */
 $router = new Core\Router();
 $db = new App\Models\Users();
-$api = new App\Models\Api();
+$api = new App\Models\API();
 
 if ($db->isAuth()) {
     $router->add('/import/', ['controller' => 'Import', 'action' => 'index']);
     $router->add('/import/import/', ['controller' => 'Import', 'action' => 'parseUploadFile']);
     $router->add('/import/insertTable/', ['controller' => 'Import', 'action' => 'insertTable']);
 
-    $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
+    $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']); // TODO передавать как GET параметр
     $router->add('/search/',['controller' => 'Table', 'action' => 'search']);
 
-    $router->add('/api/',['controller' => 'Api', 'action' => 'index']);
-    $router->add('/api/token/{hash:[a-zA-z0-9]+}',['controller' => 'Api', 'action' => 'getToken']);
+    $router->add('/api/',['controller' => 'API', 'action' => 'index']);
+    $router->add('/api/token/{hash:[a-zA-z0-9]+}',['controller' => 'API', 'action' => 'getToken']);
 }
+//$router->add('/api/',['controller' => 'API', 'action' => 'noUser']); // TODO не должно быть ошибок , выдавать пользовательскую ошибку
 
-$router->add('/api/clients/',['controller' => 'Api', 'action' => 'chooseMethod']);
+$router->add('/api/clients/',['controller' => 'API', 'action' => 'chooseMethod']);
 
 $router->add('/', ['controller' => 'SignIn', 'action' => 'index']);
 $router->add('/sign_in/', ['controller' => 'SignIn', 'action' => 'signIn']);

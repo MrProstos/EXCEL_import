@@ -20,7 +20,7 @@ class Error
      *
      * @return void
      */
-    public static function errorHandler($level, $message, $file, $line)
+    public static function errorHandler($level, $message, $file, $line): void
     {
         if (error_reporting() !== 0) {  // to keep the @ operator working
             throw new \ErrorException($message, 0, $level, $file, $line);
@@ -34,7 +34,7 @@ class Error
      *
      * @return void
      */
-    public static function exceptionHandler($exception)
+    public static function exceptionHandler($exception): void
     {
         // Code is 404 (not found) or 500 (general error)
         $code = $exception->getCode();

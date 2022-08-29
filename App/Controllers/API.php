@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\UserException;
 use Core\View;
 use Exception;
 
-class Api extends \Core\Controller
+class API extends \Core\Controller
 {
     public const UNAUTHORIZED = 401;
     public const UNKNOWN_METHOD = 405;
@@ -40,7 +41,7 @@ class Api extends \Core\Controller
      */
     public function getTokenAction(): void
     {
-        $api = new \App\Models\Api();
+        $api = new \App\Models\API();
         $token = $api->getToken($this->route_params['hash']);
         echo json_encode(['token' => $token]);
     }
@@ -54,30 +55,30 @@ class Api extends \Core\Controller
         // TODO создать функцию обработки пользовательских ошибок. Создать свой класс наследуемый от Exception
         try {
             if (!isset($_POST['method']) || !isset($_POST['params'])) {
-                throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+                throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
             }
 
             $headers = getallheaders();
             $token = $headers['Authorization'];
 
-            $api = new \App\Models\Api();
+            $api = new \App\Models\API();
             if (!$api->tokenVerification($token)) {
-                throw new Exception('Invalid token', self::UNAUTHORIZED);
+                throw new UserException('Invalid token', self::UNAUTHORIZED);
             }
 
             $method = $_POST['method'] . 'ActionDB';
             $data = $_POST['params'];
             if (!method_exists($api, $method)) {
-                throw new Exception('There is no such method', self::UNKNOWN_METHOD);
+                throw new UserException('There is no such method', self::UNKNOWN_METHOD);
             }
 
             if (!$this->isCorrectData($method, $data)) {
-                throw new Exception('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+                throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
             }
 
-            $result = $api->$method($data, $token);
+            $result = $api->$method($data);
             echo json_encode($result);
-        } catch (Exception $e) {
+        } catch (UserException $e) {
             $this->sendError($e->getCode(), $e->getMessage());
             return;
         }

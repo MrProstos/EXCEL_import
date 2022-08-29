@@ -1,6 +1,6 @@
 'use strict';
 
-const TOKEN = '63070b4c04a604.64646160'
+const TOKEN = 'test'
 
 //Get a token
 function getToken() {

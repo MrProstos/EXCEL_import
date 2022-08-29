@@ -1,6 +1,7 @@
 'use strict';
 
 //Search using the Sphinx
+// TODO Sphinx доделать пейджер
 function Search() {
     $('.search__input').keyup(function () {
         let search_value = $(this).val();
