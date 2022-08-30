@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\UserException;
+use Core\UserException;
 use PDO;
 
 class API extends \Core\Model
@@ -282,7 +282,7 @@ class API extends \Core\Model
                     $response[] = [
                         'sku' => $item['sku'],
                         'status' => \App\Controllers\API::THE_OBJECT_COULD_NOT_BE_DELETED,
-                        'message' => 'THE_OBJECT_COULD_NOT_BE_DELETED'
+                        'message' => 'The object could not be deleted'
                     ];
                 }
             }

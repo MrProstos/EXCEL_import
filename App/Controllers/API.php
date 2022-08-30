@@ -2,9 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\UserException;
+use Core\UserException;
 use Core\View;
-use Exception;
 
 class API extends \Core\Controller
 {
@@ -52,18 +51,19 @@ class API extends \Core\Controller
      */
     public function chooseMethodAction(): void
     {
-        // TODO создать функцию обработки пользовательских ошибок. Создать свой класс наследуемый от Exception
         try {
-            if (!isset($_POST['method']) || !isset($_POST['params'])) {
-                throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+            $headers = getallheaders();
+            if (!isset($headers['Authorization'])) {
+                throw new UserException('No token', self::UNAUTHORIZED);
             }
 
-            $headers = getallheaders();
-            $token = $headers['Authorization'];
-
             $api = new \App\Models\API();
-            if (!$api->tokenVerification($token)) {
+            if (!$api->tokenVerification($headers['Authorization'])) {
                 throw new UserException('Invalid token', self::UNAUTHORIZED);
+            }
+
+            if (!isset($_POST['method']) || !isset($_POST['params'])) {
+                throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
             }
 
             $method = $_POST['method'] . 'ActionDB';
@@ -117,8 +117,8 @@ class API extends \Core\Controller
                         case array_search('sku', $item) === '':
                         case array_search('product_name', $item) === '':
                         case array_search('supplier', $item) === '':
-                        case array_search('price', $item) === '':
-                        case array_search('cnt', $item) === '':
+                        case array_search('price', $item) === null:
+                        case array_search('cnt', $item) === null:
                             return false;
                     }
                 }

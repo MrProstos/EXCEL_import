@@ -18,9 +18,33 @@ class Table extends \Core\Controller
     public function indexAction(): void
     {
         $activePage = $this->route_params['page'];
+        switch (true) {
+            case isset($this->route_params['word']):
+                $search = new Sphinx();
+                $word = urldecode($this->route_params['word']);
 
-        $data = $this->pageAction($activePage);
-        View::renderTemplate('table.twig', ['title' => 'Таблица', 'data' => $data, 'activePage' => $activePage]);
+                $data = $search->searchProductName($word, $activePage);
+                View::renderTemplate('table.twig', [
+                    'title' => 'Таблица',
+                    'data' => $data,
+                    'activePage' => $activePage,
+                    'action' => 'search',
+                    'word' => $word,
+                    'URL' => '/search/' . $word . '/'
+                ]);
+
+                break;
+            default:
+                $data = $this->pageAction($activePage);
+                View::renderTemplate('table.twig', [
+                    'title' => 'Таблица',
+                    'data' => $data,
+                    'activePage' => $activePage,
+                    'action' => 'table'
+                ]);
+
+                break;
+        }
     }
 
     /**
@@ -45,8 +69,9 @@ class Table extends \Core\Controller
      */
     public function searchAction(): void
     {
-        $word = $_POST['search_word'];
         $search = new Sphinx();
-        echo json_encode($search->searchProductName($word));
+        $this->route_params['word'] = urldecode($this->route_params['word']);
+        $data = $search->searchProductName($this->route_params['word']);
+//        echo json_encode();
     }
 }

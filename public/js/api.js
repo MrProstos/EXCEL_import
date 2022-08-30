@@ -1,6 +1,6 @@
 'use strict';
 
-const TOKEN = 'test'
+const TOKEN = '63070b4c04a604.64646160'
 
 //Get a token
 function getToken() {
@@ -161,7 +161,7 @@ function Get() {
         data: {
             'method': 'get',
             'params': [{
-                'sku': '000006890',
+                'sku': '000000',
             }, {
                 'sku': '000007777',
             }, {

@@ -7,10 +7,9 @@
                 <input class="input search__input" type="text">
             </div>
             <div class="control">
-                <a class="button is-info" onclick="Reset()">Очистить</a>
+                <button class="button is-info" onclick="Search()">Поиск</button>
             </div>
         </div>
-
         <script>Search()</script>
         <table class="table result-table">
             <thead>
@@ -25,7 +24,6 @@
             <tbody class="result-database-table">
             {% for row in data['data'] %}
                 <tr>
-
                     {% for cell in row %}
                         <td>{{ cell }}</td>
                     {% endfor %}
@@ -37,17 +35,40 @@
         </table>
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
             {% if data['nAllRow'] > 0 %}
-                <a class="pagination-next" href="/table/{{ data['nAllRow']|round - 1 }}">В конец</a>
-                <a class="pagination-previous" href="/table/0">В начало</a>
+
+                {% if action == 'table' %}
+                    <a class="pagination-next" href="/{{ action }}/{{ data['nAllRow'] - 1 }}">В конец</a>
+                    <a class="pagination-previous" href="/{{ action }}/0">В начало</a>
+                {% else %}
+                    <a class="pagination-next" href="/{{ action }}/{{ word }}/{{ data['nAllRow'] }}">В
+                        конец</a>
+                    <a class="pagination-previous" href="/{{ action }}/{{ word }}/0">В начало</a>
+                {% endif %}
                 <ul class="pagination-list">
+
                     {% for i in range(0, data['nAllRow']) %}
 
                         {% if i < activePage + 3 and i > activePage - 3 %}
 
                             {% if i == activePage %}
-                                <li><a class="pagination-link is-current" href="/table/{{ i }}">{{ i + 1 }}</a></li>
+
+                                {% if action == 'table' %}
+                                    <li><a class="pagination-link is-current"
+                                           href="/{{ action }}/{{ i }}">{{ i + 1 }}</a></li>
+                                {% else %}
+                                    <li><a class="pagination-link is-current"
+                                           href="/{{ action }}/{{ word }}/{{ i }}">{{ i + 1 }}</a></li>
+                                {% endif %}
+
                             {% else %}
-                                <li><a class="pagination-link" href="/table/{{ i }}">{{ i + 1 }}</a></li>
+
+                                {% if action == 'table' %}
+                                    <li><a class="pagination-link" href="/{{ action }}/{{ i }}">{{ i + 1 }}</a></li>
+                                {% else %}
+                                    <li><a class="pagination-link"
+                                           href="/{{ action }}/{{ word }}/{{ i }}">{{ i + 1 }}</a></li>
+                                {% endif %}
+
                             {% endif %}
                         {% endif %}
                     {% endfor %}
