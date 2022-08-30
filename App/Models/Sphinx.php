@@ -7,7 +7,6 @@ use PDO;
 
 class Sphinx extends Model
 {
-    //TODO брать только id,user_id
     /**
      * @var PDO Sphinx connection
      */
