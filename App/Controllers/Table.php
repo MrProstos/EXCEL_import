@@ -30,7 +30,6 @@ class Table extends \Core\Controller
                     'activePage' => $activePage,
                     'action' => 'search',
                     'word' => $word,
-                    'URL' => '/search/' . $word . '/'
                 ]);
 
                 break;
@@ -40,7 +39,7 @@ class Table extends \Core\Controller
                     'title' => 'Таблица',
                     'data' => $data,
                     'activePage' => $activePage,
-                    'action' => 'table'
+                    'action' => 'table',
                 ]);
 
                 break;
