@@ -263,7 +263,7 @@ class API extends \Core\Model
         try {
             $db = $this->getDB();
             /*TODO implode() DELETE FROM table WHERE sku IN (xxx, yyyy, bbbb) изменить.
-             Кажется лучше оставик как было, что бы проще было находить какие записи существуют*/
+             TODO Если удалять все записи через IN то как потом найти каких записей не было?*/
             $result = $db->prepare('DELETE price
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id

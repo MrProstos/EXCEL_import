@@ -7,6 +7,7 @@ use Core\View;
 
 class API extends \Core\Controller
 {
+    // TODO перенести в Model
     public const UNAUTHORIZED = 401;
     public const UNKNOWN_METHOD = 405;
     public const OBJECT_NOT_FOUND = 406;
@@ -52,6 +53,8 @@ class API extends \Core\Controller
     public function chooseMethodAction(): void
     {
         try {
+            $data = json_decode(file_get_contents('php://input'), true);
+
             $headers = getallheaders();
             if (!isset($headers['Authorization'])) {
                 throw new UserException('No token', self::UNAUTHORIZED);
@@ -62,21 +65,23 @@ class API extends \Core\Controller
                 throw new UserException('Invalid token', self::UNAUTHORIZED);
             }
 
-            if (!isset($_POST['method']) || !isset($_POST['params'])) {
+            if (!isset($data['method']) || !isset($data['params'])) {
                 throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
             }
 
-            $method = $_POST['method'] . 'ActionDB';
-            $data = $_POST['params'];
+            $method = $data['method'] . 'ActionDB';
+            $params = $data['params'];
             if (!method_exists($api, $method)) {
                 throw new UserException('There is no such method', self::UNKNOWN_METHOD);
             }
 
-            if (!$this->isCorrectData($method, $data)) {
+            if (!$this->isCorrectData($method, $params)) {
                 throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
             }
 
-            $result = $api->$method($data);
+            $result = $api->$method($params);
+
+            header('Content-Type: application/json',true);
             echo json_encode($result);
         } catch (UserException $e) {
             $this->sendError($e->getCode(), $e->getMessage());

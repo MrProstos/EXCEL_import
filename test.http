@@ -1,0 +1,162 @@
+# @name Add запрос
+POST {{URL}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "method": "add",
+  "params": [
+    {
+      "sku": "000006890",
+      "product_name": "Кофта",
+      "supplier": "МояОдежда",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "000007777",
+      "product_name": "Майка",
+      "supplier": "МояОдежда",
+      "price": 187,
+      "cnt": 122
+    },
+    {
+      "sku": "000006666",
+      "product_name": "Штаны",
+      "supplier": "МояОдежда",
+      "price": 300,
+      "cnt": 12
+    }
+  ]
+}
+
+###
+# @name Update запрос
+POST {{URL}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "method": "update",
+  "params": [
+    {
+      "sku": "000006890",
+      "product_name": "Кофта",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "000007777",
+      "product_name": "Кофта",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "000006666",
+      "product_name": "Кофта",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "WWW",
+      "product_name": "Куртка",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    }
+  ]
+}
+
+###
+# @name Get запрос
+POST {{URL}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "method": "get",
+  "params": [
+    {
+      "sku": "000000"
+    },
+    {
+      "sku": "000007777"
+    },
+    {
+      "sku": "000006666"
+    },
+    {
+      "sku": "WWW"
+    }
+  ]
+}
+
+###
+# @name Delete запрос
+POST {{URL}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "method": "delete",
+  "params": [
+    {
+      "sku": "000000"
+    },
+    {
+      "sku": "000007777"
+    },
+    {
+      "sku": "000006666"
+    },
+    {
+      "sku": "WWW"
+    },
+    {
+      "sku": "ZXC"
+    }
+  ]
+}
+
+###
+# @name Replace запрос
+POST {{URL}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "method": "replace",
+  "params": [
+    {
+      "sku": "000006890",
+      "product_name": "Кофта",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "000007777",
+      "product_name": "Кофта",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "000006666",
+      "product_name": "Кофта",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    },
+    {
+      "sku": "WWW",
+      "product_name": "Куртка",
+      "supplier": "UPDATE",
+      "price": 122,
+      "cnt": 74
+    }
+  ]
+}

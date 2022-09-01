@@ -76,8 +76,7 @@ function Add() {
     $.ajax({
         url: '/api/clients/',
         method: 'POST',
-        headers: {'Authorization': TOKEN},
-        dataType: 'json',
+        headers: {'Authorization': TOKEN,'Content-Type': 'application/json'},
         data: {
             'method': 'add',
             'params': [{

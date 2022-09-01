@@ -65,7 +65,7 @@ class Sphinx extends Model
             $countId = count($id);
             $response = ['data' => [], 'nAllRow' => $countId / 5];
             $inString = str_repeat('?,', $countId - 1) . '?';
-
+            // из-за того что нужно вставлять числа, не могу вставить строку
             $result = $sql->prepare("SELECT id, sku, product_name, supplier, price, cnt FROM price WHERE id IN ($inString)
                                             LIMIT 5 OFFSET ?");
 
