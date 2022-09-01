@@ -66,7 +66,7 @@ class Sphinx extends Model
             $response = ['data' => [], 'nAllRow' => $countId / 5];
             $inString = str_repeat('?,', $countId - 1) . '?';
 
-            $result = $sql->prepare("SELECT sku, product_name, supplier, price, cnt FROM price WHERE id IN ($inString)
+            $result = $sql->prepare("SELECT id, sku, product_name, supplier, price, cnt FROM price WHERE id IN ($inString)
                                             LIMIT 5 OFFSET ?");
 
             $result->bindValue($countId + 1, $page, PDO::PARAM_INT);

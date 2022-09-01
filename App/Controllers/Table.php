@@ -19,7 +19,7 @@ class Table extends \Core\Controller
     {
         $activePage = $this->route_params['page'];
         switch (true) {
-            case isset($this->route_params['word']):
+            case isset($this->route_params['word']): //TODO сделать один путь для поиска и таблицы
                 $search = new Sphinx();
                 $word = urldecode($this->route_params['word']);
 
