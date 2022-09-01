@@ -22,7 +22,7 @@ if ($db->isAuth()) {
     $router->add('/import/import/', ['controller' => 'Import', 'action' => 'parseUploadFile']);
     $router->add('/import/insertTable/', ['controller' => 'Import', 'action' => 'insertTable']);
 
-    $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']); // TODO передавать как GET параметр
+    $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
     $router->add('/search/{word:[a-zA-z0-9%]+}/{page:\d+}',['controller' => 'Table', 'action' => 'index']);
 
     $router->add('/api/',['controller' => 'API', 'action' => 'index']);
@@ -39,4 +39,10 @@ $router->add('/sign_up/', ['controller' => 'SignUp', 'action' => 'index']);
 $router->add('/sign_up/registration/', ['controller' => 'SignUp', 'action' => 'registration']);
 $router->add('/sign_up/emailVerification/', ['controller' => 'SignUp', 'action' => 'emailVerification']);
 
-$router->dispatch($_SERVER['REQUEST_URI']);
+try {
+    $router->dispatch($_SERVER['REQUEST_URI']);
+} catch (Exception $e) {
+    http_response_code(404);
+    echo 'Страница не найдена';
+}
+
