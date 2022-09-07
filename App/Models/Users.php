@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 /**
  * Methods for working with user
  */
@@ -18,7 +17,7 @@ class Users extends \Core\Model
     public function registrationUser(string $username, string $email, string $passwd): bool
     {
         try {
-            $db =$this->getDB();
+            $db = $this->getDB();
 
             $result = $db->prepare("INSERT INTO reg_user (username, email, passwd, confirm_email) VALUES (?, ?, MD5(CONCAT(?, ?)), 'no')");
             $result->execute([$username, $email, $email, $passwd]);

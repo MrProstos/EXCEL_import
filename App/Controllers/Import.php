@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\Price;
 use Core\View;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -73,7 +72,7 @@ class Import extends \Core\Controller
         header('Content-type:application/json');
 
         if (isset($_POST['data'])) {
-            $dbPrice = new Price();
+            $dbPrice = new \App\Models\Import();
             $result = $dbPrice->insertDataImport($_POST['data']);
 
             if ($result === 0) {

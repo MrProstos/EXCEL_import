@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\Price;
+use App\Models\Import;
 use App\Models\Sphinx;
 use Core\View;
 
@@ -53,7 +53,7 @@ class Table extends \Core\Controller
      */
     private function pageAction(int $page): bool|array
     {
-        $dbPrice = new Price();
+        $dbPrice = new Import();
         $dataTable = $dbPrice->showTablePrice($page);
 
         if ($dataTable === []) {

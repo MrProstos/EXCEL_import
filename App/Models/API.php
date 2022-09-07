@@ -234,6 +234,8 @@ class API extends \Core\Model
     private function insertRequest(array $data): bool
     {
         try {
+            $reg = new Regular();
+
             $db = $this->getDB();
             $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
                                             values (:userId, :sku, :product_name, :supplier, :price, :cnt)');
@@ -244,8 +246,8 @@ class API extends \Core\Model
                     ':sku' => $item['sku'],
                     ':product_name' => $item['product_name'],
                     ':supplier' => $item['supplier'],
-                    ':price' => $item['price'],
-                    ':cnt' => $item['cnt']
+                    ':price' => $reg->validPrice($item['price']),
+                    ':cnt' => $reg->validCnt($item['cnt'])
                 ]);
             }
             return true;
@@ -311,6 +313,17 @@ class API extends \Core\Model
         ]);
 
         return $result->rowCount();
+    }
+
+    /**
+     * @param int $idUser
+     * @return void
+     */
+    public function startProcess(int $idUser): void
+    {
+        $result = $this->getDB()->prepare('CALL userInfo(:idUser)');
+        $result->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+        $result->execute();
     }
 }
 

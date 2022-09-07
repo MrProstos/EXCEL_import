@@ -23,14 +23,15 @@ if ($db->isAuth()) {
     $router->add('/import/insertTable/', ['controller' => 'Import', 'action' => 'insertTable']);
 
     $router->add('/table/{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
-    $router->add('/search/{word:[a-zA-z0-9%]+}/{page:\d+}',['controller' => 'Table', 'action' => 'index']);
+    $router->add('/search/{word:[a-zA-z0-9%]+}/{page:\d+}', ['controller' => 'Table', 'action' => 'index']);
 
-    $router->add('/api/',['controller' => 'API', 'action' => 'index']);
-    $router->add('/api/token/{hash:[a-zA-z0-9]+}',['controller' => 'API', 'action' => 'getToken']);
+    $router->add('/api/', ['controller' => 'API', 'action' => 'index']);
+    $router->add('/api/token/{hash:[a-zA-z0-9]+}', ['controller' => 'API', 'action' => 'getToken']);
+
+    $router->add('/export/', ['controller' => 'Export', 'action' => 'index']);
 }
-//$router->add('/api/',['controller' => 'API', 'action' => 'noUser']); // TODO не должно быть ошибок , выдавать пользовательскую ошибку
 
-$router->add('/api/clients/',['controller' => 'API', 'action' => 'chooseMethod']);
+$router->add('/api/clients/', ['controller' => 'API', 'action' => 'chooseMethod']);
 
 $router->add('/', ['controller' => 'SignIn', 'action' => 'index']);
 $router->add('/sign_in/', ['controller' => 'SignIn', 'action' => 'signIn']);

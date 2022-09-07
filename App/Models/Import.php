@@ -5,12 +5,12 @@ namespace App\Models;
 use PDO;
 
 /**
- *  Methods for the Price table
+ *  Methods for the Import table
  */
-class Price extends \Core\Model
+class Import extends \Core\Model
 {
     /**
-     * Add data to the table Price
+     * Add data to the table Import
      * @param array $data JSON data from the user
      * @return int Number of recorded lines
      */
@@ -31,6 +31,7 @@ class Price extends \Core\Model
             }
         }
 
+        $reg = new Regular();
         for ($i = 0; $i < count($data['sku']['value']); $i++) {
             try {
                 $sku = $data['sku']['value'][$i] ?? null;
@@ -38,6 +39,13 @@ class Price extends \Core\Model
                 $supplier = $data['supplier']['value'][$i] ?? null;
                 $price = $data['price']['value'][$i] ?? null;
                 $cnt = $data['cnt']['value'][$i] ?? null;
+
+                if (!$reg->isValidSku($sku) || !$reg->isValidPrice($price) || !$reg->isValidCnt($cnt)) {
+                    continue;
+                }
+
+                $reg->validPrice($price);
+                $reg->validCnt($cnt);
 
                 $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
                                                 SELECT (SELECT id FROM reg_user WHERE passwd = ?), ?, ?, ?, ?, ?');

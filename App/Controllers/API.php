@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Regular;
 use Core\UserException;
 use Core\View;
 
@@ -75,13 +76,13 @@ class API extends \Core\Controller
                 throw new UserException('There is no such method', self::UNKNOWN_METHOD);
             }
 
-            if (!$this->isCorrectData($method, $params)) {
+            if (!$this->isCorrectData($data['method'], $params)) {
                 throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
             }
 
             $result = $api->$method($params);
 
-            header('Content-Type: application/json',true);
+            header('Content-Type: application/json', true);
             echo json_encode($result);
         } catch (UserException $e) {
             $this->sendError($e->getCode(), $e->getMessage());
@@ -97,6 +98,7 @@ class API extends \Core\Controller
      */
     private function isCorrectData(string $method, array $data): bool
     {
+        $reg = new Regular();
         switch ($method) {
             case 'get':
             case 'delete':
@@ -124,6 +126,10 @@ class API extends \Core\Controller
                         case array_search('supplier', $item) === '':
                         case array_search('price', $item) === null:
                         case array_search('cnt', $item) === null:
+
+                        case !$reg->isValidSku($item['sku']):
+                        case !$reg->isValidPrice($item['price']):
+                        case !$reg->isValidCnt($item['cnt']):
                             return false;
                     }
                 }
