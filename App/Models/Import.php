@@ -9,6 +9,18 @@ use PDO;
  */
 class Import extends \Core\Model
 {
+    private string $userId;
+
+    public function setUserId(string $hash)
+    {
+        $db = $this->getDB();
+        $result = $db->prepare('SELECT id FROM reg_user WHERE passwd = ?');
+        $result->execute([$hash]);
+
+        $row = $result->fetch();
+        $this->userId = $row['id'];
+    }
+
     /**
      * Add data to the table Import
      * @param array $data JSON data from the user
@@ -44,12 +56,11 @@ class Import extends \Core\Model
                     continue;
                 }
 
-                $reg->validPrice($price);
-                $reg->validCnt($cnt);
+                $price = $reg->validPrice($price);
+                $cnt = $reg->validCnt($cnt);
 
                 $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
                                                 SELECT (SELECT id FROM reg_user WHERE passwd = ?), ?, ?, ?, ?, ?');
-
                 $result->execute([$_COOKIE['hash'], $sku, $product_name, $supplier, $price, $cnt]);
                 $nRow++;
             } catch
@@ -96,5 +107,12 @@ class Import extends \Core\Model
             echo $e->getMessage();
             return [];
         }
+    }
+
+    public function __destruct()
+    {
+        $result = $this->getDB()->prepare('CALL userInfo(:idUser)');
+        $result->bindParam(':idUser', $this->userId, PDO::PARAM_INT);
+        $result->execute();
     }
 }

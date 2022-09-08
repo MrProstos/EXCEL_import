@@ -73,6 +73,8 @@ class Import extends \Core\Controller
 
         if (isset($_POST['data'])) {
             $dbPrice = new \App\Models\Import();
+
+            $dbPrice->setUserId($_COOKIE['hash']);
             $result = $dbPrice->insertDataImport($_POST['data']);
 
             if ($result === 0) {

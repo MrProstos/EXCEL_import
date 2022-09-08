@@ -8,7 +8,6 @@ use Core\View;
 
 class API extends \Core\Controller
 {
-    // TODO перенести в Model
     public const UNAUTHORIZED = 401;
     public const UNKNOWN_METHOD = 405;
     public const OBJECT_NOT_FOUND = 406;
@@ -84,6 +83,8 @@ class API extends \Core\Controller
 
             header('Content-Type: application/json', true);
             echo json_encode($result);
+
+            $api->final();
         } catch (UserException $e) {
             $this->sendError($e->getCode(), $e->getMessage());
             return;

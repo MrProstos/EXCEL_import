@@ -68,6 +68,4 @@ class Regular
         $newCnt = preg_replace(['/[\s`]+/', '/[A-zА-я]+/u', '/^\D+|\D+$/'], '', $cnt);
         return preg_replace('/(\d+)[,.](\d+)/', '$1.$2', $newCnt);
     }
-
-
 }

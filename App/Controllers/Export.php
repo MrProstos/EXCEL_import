@@ -14,8 +14,6 @@ class Export extends \Core\Controller
     public function indexAction()
     {
         try {
-            $nameFile = mt_rand(5, 15) . '.xlsx';
-
             $export = new \App\Models\Export();
             $data = $export->export();
 
@@ -31,9 +29,12 @@ class Export extends \Core\Controller
             }
 
             $writer = new Xlsx($spreadSheet);
-            $writer->save($nameFile); // TODO не сохранять , а сразу отправлять
 
-            $this->sendFile($nameFile);
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment; filename="export.xls"');
+
+            $writer->save('php://output'); // TODO не сохранять , а сразу отправлять
+            exit();
         } catch (\Exception) {
             echo 'Ошибка экспорта';
         }

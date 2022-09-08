@@ -98,6 +98,7 @@ class API extends \Core\Model
     {
         try {
             $db = $this->getDB();
+            $reg = new Regular();
 
             $response = [];
             foreach ($data as $item) {
@@ -117,8 +118,8 @@ class API extends \Core\Model
                         ':sku' => $item['sku'],
                         ':product_name' => $item['product_name'],
                         ':supplier' => $item['supplier'],
-                        ':price' => $item['price'],
-                        ':cnt' => $item['cnt']
+                        ':price' => $reg->validPrice($item['price']),
+                        ':cnt' => $reg->validCnt($item['cnt'])
                     ]);
 
                     $response[] = ['sku' => $item['sku']];
@@ -129,11 +130,12 @@ class API extends \Core\Model
                         ':sku' => $item['sku'],
                         ':product_name' => $item['product_name'],
                         ':supplier' => $item['supplier'],
-                        ':price' => $item['price'],
-                        ':cnt' => $item['cnt']
+                        ':price' => $reg->validPrice($item['price']),
+                        ':cnt' => $reg->validCnt($item['cnt'])
                     ];
                 }
             }
+
             return $response;
         } catch (\PDOException) {
             throw new UserException('Failed to update the object', \App\Controllers\API::FAILED_TO_UPDATE_THE_OBJECT);
@@ -250,6 +252,7 @@ class API extends \Core\Model
                     ':cnt' => $reg->validCnt($item['cnt'])
                 ]);
             }
+
             return true;
         } catch (\PDOException) {
             return false;
@@ -264,8 +267,7 @@ class API extends \Core\Model
     {
         try {
             $db = $this->getDB();
-            /*TODO implode() DELETE FROM table WHERE sku IN (xxx, yyyy, bbbb) изменить.
-             TODO Если удалять все записи через IN то как потом найти каких записей не было?*/
+
             $result = $db->prepare('DELETE price
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id
@@ -316,13 +318,12 @@ class API extends \Core\Model
     }
 
     /**
-     * @param int $idUser
      * @return void
      */
-    public function startProcess(int $idUser): void
+    public function final(): void
     {
         $result = $this->getDB()->prepare('CALL userInfo(:idUser)');
-        $result->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+        $result->bindParam(':idUser', $this->userId, PDO::PARAM_INT);
         $result->execute();
     }
 }
