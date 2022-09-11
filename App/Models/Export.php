@@ -25,7 +25,8 @@ class Export extends \Core\Model
     {
         $id = $this->getUserIdByHash($_COOKIE['hash']);
 
-        $result = $this->getDB()->prepare('SELECT sku, product_name, supplier, price, cnt FROM price WHERE user_id = :id');
+        $result = $this->getDB()->prepare('SELECT sku, product_name, supplier, price, cnt FROM price 
+                                               WHERE user_id = :id');
         $result->bindValue(':id', $id, PDO::PARAM_INT);
         $result->execute();
 

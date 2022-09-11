@@ -2,21 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Models\Regular;
 use Core\UserException;
 use Core\View;
 
 class API extends \Core\Controller
 {
-    public const UNAUTHORIZED = 401;
-    public const UNKNOWN_METHOD = 405;
-    public const OBJECT_NOT_FOUND = 406;
-    public const SCHEMA_ERROR_DATA = 407;
-    public const FAILED_TO_ADD_AN_OBJECT = 408;
-    public const THE_OBJECT_COULD_NOT_BE_DELETED = 409;
-    public const FAILED_TO_UPDATE_THE_OBJECT = 410;
-    public const THE_OBJECT_COULD_NOT_BE_REPLACED = 411;
-    public const UNKNOWN_ERROR = 499;
 
     public function indexAction()
     {
@@ -57,21 +47,21 @@ class API extends \Core\Controller
 
             $headers = getallheaders();
             if (!isset($headers['Authorization'])) {
-                throw new UserException('No token', self::UNAUTHORIZED);
+                throw new UserException('No token', \App\Models\API::UNAUTHORIZED);
             }
 
             $api = new \App\Models\API();
             if (!$api->tokenVerification($headers['Authorization'])) {
-                throw new UserException('Invalid token', self::UNAUTHORIZED);
+                throw new UserException('Invalid token', \App\Models\API::UNAUTHORIZED);
             }
 
             if (!isset($data['method']) || !isset($data['params'])) {
-                throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
+                throw new UserException('Invalid data of the param field', \App\Models\API::SCHEMA_ERROR_DATA);
             }
 
             $method = $data['method'] . 'ActionDB';
             if (!method_exists($api, $method)) {
-                throw new UserException('There is no such method', self::UNKNOWN_METHOD);
+                throw new UserException('There is no such method', \App\Models\API::UNKNOWN_METHOD);
             }
 
             $headers = getallheaders();
