@@ -70,72 +70,25 @@ class API extends \Core\Controller
             }
 
             $method = $data['method'] . 'ActionDB';
-            $params = $data['params'];
             if (!method_exists($api, $method)) {
                 throw new UserException('There is no such method', self::UNKNOWN_METHOD);
             }
 
-            if (!$this->isCorrectData($data['method'], $params)) {
-                throw new UserException('Invalid data of the param field', self::SCHEMA_ERROR_DATA);
-            }
+            $headers = getallheaders();
 
-            $result = $api->$method($params);
+            $data = json_decode(file_get_contents('php://input'), true);
+            $method = $data['method'] . 'ActionDB';
+
+            $api = new \App\Models\API();
+            $api->setUserId($headers['Authorization']);
+
+            $result = $api->$method($data['params']);
 
             header('Content-Type: application/json', true);
             echo json_encode($result);
-
-            $api->final();
         } catch (UserException $e) {
             $this->sendError($e->getCode(), $e->getMessage());
             return;
         }
-    }
-
-    /**
-     * Checks the validity of the data for the method
-     * @param string $method Name of the method
-     * @param array $data Data
-     * @return bool
-     */
-    private function isCorrectData(string $method, array $data): bool
-    {
-        $reg = new Regular();
-        switch ($method) {
-            case 'get':
-            case 'delete':
-                foreach ($data as $item) {
-                    switch (true) {
-                        case !array_key_exists('sku', $item):
-                        case array_search('sku', $item) === '':
-                            return false;
-                    }
-                }
-                break;
-            case 'add':
-            case 'update':
-            case 'replace':
-                foreach ($data as $item) {
-                    switch (true) {
-                        case !array_key_exists('sku', $item):
-                        case !array_key_exists('product_name', $item):
-                        case !array_key_exists('supplier', $item):
-                        case !array_key_exists('price', $item):
-                        case !array_key_exists('cnt', $item):
-
-                        case array_search('sku', $item) === '':
-                        case array_search('product_name', $item) === '':
-                        case array_search('supplier', $item) === '':
-                        case array_search('price', $item) === null:
-                        case array_search('cnt', $item) === null:
-
-                        case !$reg->isValidSku($item['sku']):
-                        case !$reg->isValidPrice($item['price']):
-                        case !$reg->isValidCnt($item['cnt']):
-                            return false;
-                    }
-                }
-                break;
-        }
-        return true;
     }
 }

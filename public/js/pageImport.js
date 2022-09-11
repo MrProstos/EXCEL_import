@@ -1,7 +1,8 @@
 'use strict'
 
 // Sending the form to the server and displaying the table
-function ImportForm() {
+function ImportForm()
+{
     $('.new-thead-result__cell').remove()
     $('.new-tbody-result-import__row').remove()
 
@@ -49,7 +50,8 @@ function ImportForm() {
 }
 
 // Checking file size
-function NameFile() {
+function NameFile()
+{
     $(document).ready(function () {
         $('.file__input').change(function () {
             $('.file-name').text(this.files[0]['name'])
@@ -58,51 +60,64 @@ function NameFile() {
 }
 
 // Parsing of column selection by the user
-function ChooseSelect() {
+function ChooseSelect()
+{
     $('.finish-processing__button').attr('class', 'finish-processing__button button finish-processing__button box is-primary is-loading')
-    let dataArr = {
-        'data': {
-            'sku': {'index': Number, 'value': []},
-            'product_name': {'index': Number, 'value': []},
-            'supplier': {'index': Number, 'value': []},
-            'price': {'index': Number, 'value': []},
-            'cnt': {'index': Number, 'value': []}
-        }
-    }
+
+    let indexArr = {'sku': Number, 'product_name': Number, 'supplier': Number, 'price': Number, 'cnt': Number}
+    let dataMsg = [];
 
     $('.select-col option:selected').each(function (indexSelect, valueSelect) {
-
         if ($(valueSelect).val() !== '') {
-            dataArr['data'][$(valueSelect).val()]['index'] = indexSelect
+            indexArr[$(valueSelect).val()] = indexSelect - 1
         }
     });
 
-    for (let index in dataArr['data']) {
-        $('.tbody-result-import').children().each(function (indexRow, valueRow) {
-            $(valueRow).children().each(function (indexCell, valueCell) {
+    $('.tbody-result-import').children().each(function (indexRow, valueRow) {
+        let sku, product_name, supplier, price, cnt
 
-                if (indexCell === dataArr['data'][index]['index'] - 1) {
-
-                    if ($(valueCell).text() !== '') {
-                        dataArr['data'][index]['value'].push($(valueCell).text())
-                    }
-                }
-            })
-        })
-    }
-
-    console.log(dataArr)
-    $.post('/import/insertTable/', dataArr, function (msg, status) {
-            if (status === 'success') {
-                $('.finish-processing__button').attr('class', 'finish-processing__button button finish-processing__button box')
-
-                if (msg['status'] !== 0) {
-                    alert('Импортировано строк - ' + msg['status'])
-                } else {
-                    alert('Данные не импортированы')
-                }
+        $(valueRow).children().each(function (indexCell, valueCell) {
+            if ($(valueCell).text() === undefined || $(valueCell).text() === '') {
+                return
             }
-            console.log(msg, status)
+            if (indexCell === indexArr['sku']) {
+                sku = $(valueCell).text()
+            }
+            if (indexCell === indexArr['product_name']) {
+                product_name = $(valueCell).text()
+            }
+            if (indexCell === indexArr['supplier']) {
+                supplier = $(valueCell).text()
+            }
+            if (indexCell === indexArr['price']) {
+                price = $(valueCell).text()
+            }
+            if (indexCell === indexArr['cnt']) {
+                cnt = $(valueCell).text()
+            }
+        })
+
+        if (sku !== undefined || product_name !== undefined || supplier !== undefined || price !== undefined || cnt !== undefined) {
+            dataMsg.push({'sku': sku, 'product_name': product_name, 'supplier': supplier, 'price': price, 'cnt': cnt})
         }
-    )
+    })
+
+    console.log(dataMsg)
+    $.ajax({
+        url: '/import/insertTable/',
+        type: 'POST',
+        dataType: 'json',
+        data: {data: dataMsg},
+        success: function (data) {
+            $('.finish-processing__button').attr('class', 'finish-processing__button button finish-processing__button box')
+            if (data['status'] !== 0) {
+                alert('Импортировано строк - ' + data['status'])
+            } else {
+                alert('Данные не импортированы')
+            }
+        },
+        error: function (jqXHD) {
+            console.log(jqXHD)
+        },
+    })
 }

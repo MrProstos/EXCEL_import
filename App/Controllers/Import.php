@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Core\UserException;
 use Core\View;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -66,16 +67,15 @@ class Import extends \Core\Controller
     /**
      * Add a value to the database
      * @return void
+     * @throws UserException
      */
     public function insertTableAction(): void
     {
         header('Content-type:application/json');
-
         if (isset($_POST['data'])) {
-            $dbPrice = new \App\Models\Import();
+            $dbPrice = new \App\Models\Import($_COOKIE['hash']);
 
-            $dbPrice->setUserId($_COOKIE['hash']);
-            $result = $dbPrice->insertDataImport($_POST['data']);
+            $result = $dbPrice->insertTable($_POST['data']);
 
             if ($result === 0) {
                 echo json_encode(['status' => 0]);

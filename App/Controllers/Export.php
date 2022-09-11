@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -35,10 +36,8 @@ class Export extends \Core\Controller
 
             $writer->save('php://output');
             exit();
-        } catch (\Exception) {
+        } catch (Exception) {
             echo 'Ошибка экспорта';
         }
-
     }
-
 }

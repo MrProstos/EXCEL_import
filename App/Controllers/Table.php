@@ -53,24 +53,12 @@ class Table extends \Core\Controller
      */
     private function pageAction(int $page): bool|array
     {
-        $dbPrice = new Import();
+        $dbPrice = new Import($_COOKIE['hash']);
         $dataTable = $dbPrice->showTablePrice($page);
 
         if ($dataTable === []) {
             return false;
         }
         return $dataTable;
-    }
-
-    /**
-     * Search for records
-     * @return void
-     */
-    public function searchAction(): void
-    {
-        $search = new Sphinx();
-        $this->route_params['word'] = urldecode($this->route_params['word']);
-        $data = $search->searchProductName($this->route_params['word']);
-//        echo json_encode();
     }
 }

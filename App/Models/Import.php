@@ -2,74 +2,31 @@
 
 namespace App\Models;
 
+use App\Models\Price;
+use Core\UserException;
 use PDO;
 
-/**
- *  Methods for the Import table
- */
 class Import extends \Core\Model
 {
-    private string $userId;
 
-    public function setUserId(string $hash)
+    private Price $dbPrice;
+
+    public function __construct(string $hash)
     {
-        $db = $this->getDB();
-        $result = $db->prepare('SELECT id FROM reg_user WHERE passwd = ?');
-        $result->execute([$hash]);
-
-        $row = $result->fetch();
-        $this->userId = $row['id'];
+        $dbPrice = new Price();
+        $dbPrice->setUserIdByHash($hash);
+        $this->dbPrice = $dbPrice;
     }
 
     /**
      * Add data to the table Import
      * @param array $data JSON data from the user
      * @return int Number of recorded lines
+     * @throws UserException
      */
-    public function insertDataImport(array $data): int
+    public function insertTable(array $data): int
     {
-        $db = $this->getDB();
-        $result = $db->prepare('DELETE price
-                                FROM price
-                                         INNER JOIN reg_user on price.user_id = reg_user.id
-                                WHERE reg_user.id = (SELECT id FROM reg_user WHERE reg_user.passwd = ?)');
-        $result->execute([$_COOKIE['hash']]);
-
-        $nRow = 0;
-
-        foreach ($data as $item) {
-            if (!isset($item['value'])) {
-                return 0;
-            }
-        }
-
-        $reg = new Regular();
-        for ($i = 0; $i < count($data['sku']['value']); $i++) {
-            try {
-                $sku = $data['sku']['value'][$i] ?? null;
-                $product_name = $data['product_name']['value'][$i] ?? null;
-                $supplier = $data['supplier']['value'][$i] ?? null;
-                $price = $data['price']['value'][$i] ?? null;
-                $cnt = $data['cnt']['value'][$i] ?? null;
-
-                if (!$reg->isValidSku($sku) || !$reg->isValidPrice($price) || !$reg->isValidCnt($cnt)) {
-                    continue;
-                }
-
-                $price = $reg->validPrice($price);
-                $cnt = $reg->validCnt($cnt);
-
-                $result = $db->prepare('INSERT INTO price (user_id, sku, product_name, supplier, price, cnt)
-                                                SELECT (SELECT id FROM reg_user WHERE passwd = ?), ?, ?, ?, ?, ?');
-                $result->execute([$_COOKIE['hash'], $sku, $product_name, $supplier, $price, $cnt]);
-                $nRow++;
-            } catch
-            (\PDOException $e) {
-                echo $e->getMessage();
-                return 0;
-            }
-        }
-        return $nRow;
+        return $this->dbPrice->insert($data);
     }
 
     /**
@@ -87,10 +44,10 @@ class Import extends \Core\Model
             $result = $db->prepare('SELECT sku, product_name, supplier, price, cnt
                                             FROM price
                                                      INNER JOIN reg_user on price.user_id = reg_user.id
-                                            WHERE price.user_id = (SELECT id FROM reg_user WHERE reg_user.passwd = :hash)
+                                            WHERE price.user_id = :userId
                                             LIMIT 5 OFFSET :nRow');
             $result->bindParam(':nRow', $nRow, PDO::PARAM_INT);
-            $result->bindParam(':hash', $_COOKIE['hash']);
+            $result->bindParam(':userId', $this->dbPrice->userId, PDO::PARAM_INT);
             $result->execute();
 
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -99,7 +56,7 @@ class Import extends \Core\Model
 
             $result = $db->query('SELECT COUNT(*) AS nAllRow FROM price');
             foreach ($result as $item) {
-                $dataArr['nAllRow'] = round($item['nAllRow'] / 5); // TODO если удалить ( - 1 ) TWIG отваливается ( Argument #3 ($step) must not exceed the specified range )
+                $dataArr['nAllRow'] = round($item['nAllRow'] / 5);
             }
 
             return $dataArr;
@@ -107,12 +64,5 @@ class Import extends \Core\Model
             echo $e->getMessage();
             return [];
         }
-    }
-
-    public function __destruct()
-    {
-        $result = $this->getDB()->prepare('CALL userInfo(:idUser)');
-        $result->bindParam(':idUser', $this->userId, PDO::PARAM_INT);
-        $result->execute();
     }
 }
